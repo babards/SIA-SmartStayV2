@@ -4,9 +4,9 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
-        <div class="sidebar d-flex flex-column align-items-start py-4 position-fixed" style="top:0; left:0; height:100vh; width:240px; background-color:#f8f9fa; border-right:1px solid #dee2e6; z-index:1030;">
+        <div class="sidebar d-flex flex-column align-items-start py-4 position-fixed" style="top:0; left:0; height:100vh; width:240px; z-index:1030;">
             <div class="text-center mb-4 w-100">
-                <h4 class="fw-bold" style="letter-spacing:1px;">SmartStay</h4>
+                <h4 class="fw-bold text-white" style="letter-spacing:1px; font-size: 1.5rem; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">SmartStay</h4>
             </div>
             <nav class="nav flex-column w-100">
                 <a class="nav-link px-4 py-2" href="#properties-section">
@@ -67,7 +67,7 @@
                     @forelse($properties as $property)
                         <div class="col-md-3 mb-4">
                             <a href="{{ route('guest.properties.show', ['property' => $property->propertyID]) }}" style="text-decoration: none; color: inherit;">
-                                <div class="card h-100 shadow-sm">
+                                <div class="card h-100 shadow-sm property-card">
                                     @if($property->main_image)
                                         <img src="{{ asset('storage/' . $property->main_image) }}" class="card-img-top property-img" alt="{{ $property->propertyName }}">
                                     @else
@@ -90,8 +90,8 @@
                             </a>
                         </div>
                     @empty
-                        <div class="col-12">
-                            <div class="alert alert-info text-center">No properties found.</div>
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-info-circle me-2"></i>No properties found.
                         </div>
                     @endforelse
                 </div>
@@ -132,28 +132,40 @@
     }
     .sidebar {
         min-height: 100vh;
-        background-color: #f8f9fa;
+        background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
         padding-top: 20px;
-        border-right: 1px solid #dee2e6;
+        border-right: 1px solid #1e40af;
+        box-shadow: 2px 0 10px rgba(30, 58, 138, 0.1);
     }
     .sidebar .nav-link {
-        color: #333;
+        color: #e0e7ff !important;
         padding: 10px 20px;
         margin: 5px 0;
-        border-radius: 5px;
+        border-radius: 8px;
         transition: all 0.3s ease;
+        font-weight: 500;
+        line-height: 1.4;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .sidebar .nav-link:hover {
-        background-color: #e9ecef;
-        color: #0d6efd;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+        color: white !important;
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
     .sidebar .nav-link.active {
-        background-color: #0d6efd;
-        color: white;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        font-weight: 600;
     }
     .sidebar h4 {
         font-size: 1.5rem;
         letter-spacing: 1px;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     .main-content {
         background: #fff;
@@ -183,6 +195,12 @@
     .leaflet-control-zoom-reset:hover {
         background-color: #f4f4f4;
         color: black;
+    }
+    .property-card {
+        transition: transform 0.2s ease-in-out;
+    }
+    .property-card:hover {
+        transform: translateY(-2px);
     }
 </style>
 @endpush

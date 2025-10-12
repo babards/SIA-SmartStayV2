@@ -65,7 +65,7 @@
         <div class="row">
             @forelse($properties as $property)
                 <div class="col-md-3 mb-4" id="property-card-{{ $property->propertyID }}">
-                    <div class="card h-100 d-flex flex-column shadow-sm">
+                    <div class="card h-100 d-flex flex-column shadow-sm property-card">
                         <a href="{{ route('admin.properties.show', $property->propertyID) }}" style="text-decoration: none; color: inherit;">
                             @if($property->main_image)
                                 <img src="{{ asset('storage/' . $property->main_image) }}" class="card-img-top"
@@ -111,8 +111,8 @@
                     </div>
                 </div>
             @empty
-                <div class="col-12">
-                    <div class="alert alert-info text-center">No properties found.</div>
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle me-2"></i>No properties found.
                 </div>
             @endforelse
         </div>
@@ -195,7 +195,7 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label>Images (Max 3)</label>
+                                <label for="imageInputAdminCreate">Images (Max 3)</label>
                                 
                                 <!-- Image Preview Container for Admin Create -->
                                 <div id="imagePreviewContainerAdminCreate" class="mb-3">
@@ -205,8 +205,13 @@
                                 </div>
                                 
                                 <!-- Add Images -->
-                                <input type="file" name="propertyImages[]" id="imageInputAdminCreate" class="form-control" multiple accept="image/*" max="3">
-                                <small class="form-text text-muted">You can select up to 3 images. The first image will be the main image.</small>
+                                <input type="file" name="propertyImages[]" id="imageInputAdminCreate" class="form-control @error('propertyImages.*') is-invalid @enderror" multiple accept="image/jpeg,image/png,image/jpg,image/gif" max="3">
+                                <small class="form-text text-muted">You can select up to 3 images. Accepted formats: JPEG, PNG, JPG, GIF. Max size: 2MB per image.</small>
+                                @error('propertyImages.*')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -900,6 +905,25 @@
                     return;
                 }
                 
+                // Validate file types and sizes
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+                const maxSize = 2 * 1024 * 1024; // 2MB
+                const invalidFiles = [];
+                
+                files.forEach((file, index) => {
+                    if (!allowedTypes.includes(file.type)) {
+                        invalidFiles.push(`${file.name} (invalid file type)`);
+                    } else if (file.size > maxSize) {
+                        invalidFiles.push(`${file.name} (file too large)`);
+                    }
+                });
+                
+                if (invalidFiles.length > 0) {
+                    alert('Invalid files detected:\n' + invalidFiles.join('\n') + '\n\nPlease select only valid image files (JPEG, PNG, JPG, GIF) under 2MB each.');
+                    e.target.value = ''; // Clear the file input
+                    return;
+                }
+                
                 // Clear existing previews
                 imagePreviewContainer.innerHTML = '<div class="d-flex gap-2 flex-wrap"></div>';
                 const flexContainer = imagePreviewContainer.querySelector('.d-flex');
@@ -1047,6 +1071,14 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<style>
+    .property-card {
+        transition: transform 0.2s ease-in-out;
+    }
+    .property-card:hover {
+        transform: translateY(-2px);
+    }
+</style>
 @endpush
 
 @push('scripts')

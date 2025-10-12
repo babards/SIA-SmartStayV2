@@ -60,8 +60,25 @@ class GuestPropertyController extends Controller
 
         // Location filter
         if ($request->filled('location_filter')) {
-            $barangay = $request->input('location_filter');
-            $query->where('propertyLocation', 'like', "%$barangay%");
+            $location = $request->input('location_filter');
+            
+            // Handle different location formats
+            // For "Valencia City", also search for "Valencia"
+            // For "Malaybalay City", also search for "Malaybalay"
+            $searchTerms = [$location];
+            
+            // Add variations for city names
+            if (strpos($location, ' City') !== false) {
+                $searchTerms[] = str_replace(' City', '', $location);
+            } else {
+                $searchTerms[] = $location . ' City';
+            }
+            
+            $query->where(function ($q) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $q->orWhere('propertyLocation', 'like', "%$term%");
+                }
+            });
         }
 
         // Price filter

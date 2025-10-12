@@ -4,18 +4,28 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
-        <div class="sidebar d-flex flex-column align-items-start py-4 position-fixed" style="top:0; left:0; height:100vh; width:240px; background-color:#f8f9fa; border-right:1px solid #dee2e6; z-index:1030;">
+        <div class="sidebar d-flex flex-column align-items-start py-4 position-fixed" style="top:0; left:0; height:100vh; width:240px; z-index:1030;">
             <div class="text-center mb-4 w-100">
-                <h4 class="fw-bold" style="letter-spacing:1px;">SmartStay</h4>
+                <h4 class="fw-bold text-white" style="letter-spacing:1px; font-size: 1.5rem; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">SmartStay</h4>
             </div>
             <nav class="nav flex-column w-100">
-                <a class="nav-link px-4 py-2" href="{{ route('welcome') }}#properties-section">View Listings</a>
-                <a class="nav-link px-4 py-2" href="{{ route('welcome') }}#map-section">View Map</a>
+                <a class="nav-link px-4 py-2" href="{{ route('welcome') }}#properties-section">
+                    <i class="fas fa-list me-2"></i>View Listings
+                </a>
+                <a class="nav-link px-4 py-2" href="{{ route('welcome') }}#map-section">
+                    <i class="fas fa-map-marked-alt me-2"></i>View Map
+                </a>
                 @guest
-                    <a class="nav-link px-4 py-2" href="{{ route('login') }}">Login</a>
-                    <a class="nav-link px-4 py-2" href="{{ route('register') }}">Register</a>
+                    <a class="nav-link px-4 py-2" href="{{ route('login') }}">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </a>
+                    <a class="nav-link px-4 py-2" href="{{ route('register') }}">
+                        <i class="fas fa-user-plus me-2"></i>Register
+                    </a>
                 @else
-                    <a class="nav-link px-4 py-2" href="{{ route('dashboard') }}">Dashboard</a>
+                    <a class="nav-link px-4 py-2" href="{{ route('dashboard') }}">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
                 @endguest
             </nav>
         </div>
@@ -182,24 +192,35 @@
 <style>
     body { background: #f7f8fa; }
     .sidebar .nav-link {
-        color: #333;
+        color: #e0e7ff !important;
         padding: 10px 20px;
         margin: 5px 0;
-        border-radius: 5px;
+        border-radius: 8px;
         transition: all 0.3s ease;
         font-size: 1.08rem;
+        font-weight: 500;
+        line-height: 1.4;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .sidebar .nav-link:hover {
-        background-color: #e9ecef;
-        color: #0d6efd;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+        color: white !important;
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
     .sidebar .nav-link.active {
-        background-color: #0d6efd;
-        color: white;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        font-weight: 600;
     }
     .sidebar h4 {
         font-size: 1.5rem;
         letter-spacing: 1px;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     .main-content {
         background: #fff;

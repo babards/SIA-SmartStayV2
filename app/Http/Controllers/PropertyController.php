@@ -41,8 +41,25 @@ class PropertyController extends Controller
 
         // Add location filter
         if ($request->filled('location_filter')) {
-            $barangay = $request->input('location_filter');
-            $query->where('propertyLocation', 'like', "%$barangay%");
+            $location = $request->input('location_filter');
+            
+            // Handle different location formats
+            // For "Valencia City", also search for "Valencia"
+            // For "Malaybalay City", also search for "Malaybalay"
+            $searchTerms = [$location];
+            
+            // Add variations for city names
+            if (strpos($location, ' City') !== false) {
+                $searchTerms[] = str_replace(' City', '', $location);
+            } else {
+                $searchTerms[] = $location . ' City';
+            }
+            
+            $query->where(function ($q) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $q->orWhere('propertyLocation', 'like', "%$term%");
+                }
+            });
         }
 
         // Add price range filter
@@ -63,7 +80,7 @@ class PropertyController extends Controller
             }
         }
 
-        $properties = $query->paginate(8);
+        $properties = $query->orderBy('propertyCreatedAt', 'desc')->paginate(8);
 
         return view('landlord.properties.index', compact('properties'));
     }
@@ -247,8 +264,25 @@ class PropertyController extends Controller
 
         // Add location filter
         if ($request->filled('location_filter')) {
-            $barangay = $request->input('location_filter');
-            $query->where('propertyLocation', 'like', "%$barangay%");
+            $location = $request->input('location_filter');
+            
+            // Handle different location formats
+            // For "Valencia City", also search for "Valencia"
+            // For "Malaybalay City", also search for "Malaybalay"
+            $searchTerms = [$location];
+            
+            // Add variations for city names
+            if (strpos($location, ' City') !== false) {
+                $searchTerms[] = str_replace(' City', '', $location);
+            } else {
+                $searchTerms[] = $location . ' City';
+            }
+            
+            $query->where(function ($q) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $q->orWhere('propertyLocation', 'like', "%$term%");
+                }
+            });
         }
 
         // Add price range filter
@@ -277,6 +311,13 @@ class PropertyController extends Controller
 
     public function adminstore(Request $request)
     {
+        // Debug: Log the request data
+        \Log::info('Admin Store Request Data:', [
+            'has_files' => $request->hasFile('propertyImages'),
+            'files_count' => $request->hasFile('propertyImages') ? count($request->file('propertyImages')) : 0,
+            'all_data' => $request->except(['propertyImages'])
+        ]);
+        
         $validator = Validator::make($request->all(), [
             'propertyName' => 'required|string|max:255',
             'propertyLocation' => 'required|string|max:255',
@@ -285,9 +326,14 @@ class PropertyController extends Controller
             'propertyStatus' => 'required|in:Available,Fullyoccupied,Maintenance',
             'userID' => 'required|exists:users,id',
             'propertyImages' => 'nullable|array|max:3',
-            'propertyImages.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'propertyImages.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
+        ], [
+            'propertyImages.*.image' => 'Each file must be a valid image.',
+            'propertyImages.*.mimes' => 'Each image must be a file of type: jpeg, png, jpg, gif.',
+            'propertyImages.*.max' => 'Each image may not be greater than 2MB.',
+            'propertyImages.max' => 'You may upload a maximum of 3 images.',
         ]);
 
         if ($validator->fails()) {
@@ -315,8 +361,18 @@ class PropertyController extends Controller
         // Handle multiple images
         if ($request->hasFile('propertyImages')) {
             $imagePaths = [];
-            foreach ($request->file('propertyImages') as $image) {
-                $imagePaths[] = $image->store('properties', 'public');
+            foreach ($request->file('propertyImages') as $index => $image) {
+                if ($image && $image->isValid()) {
+                    try {
+                        $imagePaths[] = $image->store('properties', 'public');
+                    } catch (\Exception $e) {
+                        \Log::error('Image upload failed for index ' . $index . ': ' . $e->getMessage());
+                        return redirect()->route('admin.properties.index')
+                            ->withErrors(['propertyImages.' . $index => 'Failed to upload image: ' . $e->getMessage()])
+                            ->withInput()
+                            ->with('form_type', 'create');
+                    }
+                }
             }
             $data['property_images'] = $imagePaths;
         }
@@ -468,8 +524,25 @@ class PropertyController extends Controller
 
         // Location filter
         if ($request->filled('location_filter')) {
-            $barangay = $request->input('location_filter');
-            $query->where('propertyLocation', 'like', "%$barangay%");
+            $location = $request->input('location_filter');
+            
+            // Handle different location formats
+            // For "Valencia City", also search for "Valencia"
+            // For "Malaybalay City", also search for "Malaybalay"
+            $searchTerms = [$location];
+            
+            // Add variations for city names
+            if (strpos($location, ' City') !== false) {
+                $searchTerms[] = str_replace(' City', '', $location);
+            } else {
+                $searchTerms[] = $location . ' City';
+            }
+            
+            $query->where(function ($q) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $q->orWhere('propertyLocation', 'like', "%$term%");
+                }
+            });
         }
 
         // Price range filter
@@ -490,7 +563,7 @@ class PropertyController extends Controller
             }
         }
 
-        $properties = $query->paginate(9);
+        $properties = $query->orderBy('propertyCreatedAt', 'desc')->paginate(9);
         return view('tenant.properties.index', compact('properties'));
     }
 

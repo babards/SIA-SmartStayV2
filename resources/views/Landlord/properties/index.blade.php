@@ -46,7 +46,7 @@
     <div class="row" id="property-list">
     @foreach ($properties as $property)
         <div class="col-md-3 mb-4" id="property-card-{{ $property->propertyID }}">
-            <div class="card h-100 d-flex flex-column shadow-sm">
+            <div class="card h-100 d-flex flex-column shadow-sm property-card">
                 <a href="{{ route('landlord.properties.show', $property->propertyID) }}" style="text-decoration: none; color: inherit;">
                     @if ($property->main_image)
                         <img src="{{ asset('storage/' . $property->main_image) }}" class="card-img-top"
@@ -98,8 +98,8 @@
     </div>
 
     @if ($properties->isEmpty())
-    <div class="col-12">
-        <div class="alert alert-info text-center">No properties found.</div>
+    <div class="alert alert-info text-center">
+        <i class="fas fa-info-circle me-2"></i>No properties found.
     </div>
     @endif
 
@@ -1339,6 +1339,12 @@
         }
         .leaflet-popup-tip {
             max-width: 500px !important;
+        }
+        .property-card {
+            transition: transform 0.2s ease-in-out;
+        }
+        .property-card:hover {
+            transform: translateY(-2px);
         }
     </style>
 @endpush
