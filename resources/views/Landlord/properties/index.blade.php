@@ -337,13 +337,13 @@
             if (createPropertyModal) {
                 createPropertyModal.addEventListener('shown.bs.modal', function () {
                     if (!map) {
-                        const defaultLatLng = [8.1574, 125.1278];
+                        const defaultLatLng = [12.8797, 121.7740]; // Center of Philippines
                         map = L.map('map', {
                             zoomControl: true,
                             zoomControlOptions: {
                                 position: 'topright'
                             }
-                        }).setView(defaultLatLng, 15);
+                        }).setView(defaultLatLng, 6); // Zoom level 6 to show whole Philippines
 
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                             attribution: '© OpenStreetMap contributors'
@@ -362,7 +362,7 @@
                                 
                                 L.DomEvent.on(link, 'click', function(e) {
                                     L.DomEvent.preventDefault(e);
-                                    map.setView(defaultLatLng, 15);
+                                    map.setView(defaultLatLng, 6);
                                 });
                                 
                                 return container;
@@ -448,8 +448,8 @@
                             map.removeLayer(layer);
                         }
                     });
-                    const defaultLatLng = [8.1574, 125.1278];
-                    map.setView(defaultLatLng, 15);
+                    const defaultLatLng = [12.8797, 121.7740]; // Center of Philippines
+                    map.setView(defaultLatLng, 6);
                 }
 
                 // Reset form fields (including hidden latitude, longitude, location input)
@@ -544,7 +544,7 @@
                             
                             L.DomEvent.on(link, 'click', function(e) {
                                 L.DomEvent.preventDefault(e);
-                                map.setView([8.1574, 125.1278], 15);
+                                map.setView([12.8797, 121.7740], 6); // Center of Philippines
                             });
                             
                             return container;
@@ -673,8 +673,8 @@
                     // Load current images
                     loadCurrentImagesLandlord(this.dataset.id);
 
-                    const lat = parseFloat(this.dataset.latitude) || 7.9092;
-                    const lng = parseFloat(this.dataset.longitude) || 125.0949;
+                    const lat = parseFloat(this.dataset.latitude) || 12.8797; // Default to Philippines center
+                    const lng = parseFloat(this.dataset.longitude) || 121.7740;
 
                     // Show step 1 on open every time
                     mapStepEdit.style.display = 'block';
@@ -753,8 +753,8 @@
                 editPropertyModalLabel.innerText = 'Edit Property - Update Location';
 
                 // When going back to step 1, show marker again
-                const lat = parseFloat(document.getElementById('editLatitude').value) || 7.9092;
-                const lng = parseFloat(document.getElementById('editLongitude').value) || 125.0949;
+                const lat = parseFloat(document.getElementById('editLatitude').value) || 12.8797; // Default to Philippines center
+                const lng = parseFloat(document.getElementById('editLongitude').value) || 121.7740;
                 setMarkerOnMap(lat, lng);
             });
 
@@ -770,8 +770,8 @@
                     submitButtonEdit.style.display = 'none';
 
                     // Reset marker to current lat/lng or default
-                    const lat = parseFloat(document.getElementById('editLatitude').value) || 7.9092;
-                    const lng = parseFloat(document.getElementById('editLongitude').value) || 125.0949;
+                    const lat = parseFloat(document.getElementById('editLatitude').value) || 12.8797; // Default to Philippines center
+                    const lng = parseFloat(document.getElementById('editLongitude').value) || 121.7740;
                     setTimeout(() => {
                         setMarkerOnMap(lat, lng);
                     }, 300);
@@ -1065,8 +1065,8 @@
                     var group = new L.featureGroup(allMarkers);
                     propertiesMap.fitBounds(group.getBounds().pad(0.1));
                 } else {
-                    // If no markers, center on Malaybalay City
-                    propertiesMap.setView([8.1574, 125.1278], 15);
+                    // If no markers, center on Philippines
+                    propertiesMap.setView([12.8797, 121.7740], 6);
                 }
             }
 
@@ -1186,15 +1186,16 @@
                         <div style="display: flex; justify-content: space-between; gap: 2px;">
             `;
 
-            // Show past 4 days (we'll use forecast data for demo, but in real implementation you'd have historical data)
-            for (let i = 0; i < 4 && i < forecast.length; i++) {
-                const day = forecast[i];
+            // Show past 4 days historical data
+            const historical = weatherData.historical || [];
+            for (let i = 0; i < 4 && i < historical.length; i++) {
+                const day = historical[i];
                 html += `
                     <div style="text-align: center; padding: 2px; background: #fff; border-radius: 3px; border: 1px solid #e0e0e0; flex: 1; min-width: 0;">
                         <div style="font-size: 9px; color: #666; margin-bottom: 1px;">${day.day_name}</div>
                         <div style="font-size: 16px; margin-bottom: 1px;">${day.weather_icon}</div>
                         <div style="font-size: 10px; font-weight: bold; color: #333;">${day.temp_max}°</div>
-                        <div style="font-size: 8px; color: #666;">🌦️ ${day.precipitation_probability}%</div>
+                        <div style="font-size: 8px; color: #666;">🌧️ ${day.precipitation}mm</div>
                     </div>
                 `;
             }

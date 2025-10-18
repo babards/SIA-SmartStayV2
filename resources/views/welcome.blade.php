@@ -419,15 +419,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div style="display: flex; justify-content: space-between; gap: 2px;">
         `;
 
-        // Show past 4 days (we'll use forecast data for demo, but in real implementation you'd have historical data)
-        for (let i = 0; i < 4 && i < forecast.length; i++) {
-            const day = forecast[i];
+        // Show past 4 days historical data
+        const historical = weatherData.historical || [];
+        for (let i = 0; i < 4 && i < historical.length; i++) {
+            const day = historical[i];
             html += `
                 <div style="text-align: center; padding: 2px; background: #fff; border-radius: 3px; border: 1px solid #e0e0e0; flex: 1; min-width: 0;">
                     <div style="font-size: 9px; color: #666; margin-bottom: 1px;">${day.day_name}</div>
                     <div style="font-size: 16px; margin-bottom: 1px;">${day.weather_icon}</div>
                     <div style="font-size: 10px; font-weight: bold; color: #333;">${day.temp_max}°</div>
-                    <div style="font-size: 8px; color: #666;">🌦️ ${day.precipitation_probability}%</div>
+                    <div style="font-size: 8px; color: #666;">🌧️ ${day.precipitation}mm</div>
                 </div>
             `;
         }
