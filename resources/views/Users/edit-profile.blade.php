@@ -20,7 +20,7 @@
                             <div class="col-md-12">
                                 <label class="form-label">Profile Picture</label>
                                 <div class="d-flex align-items-center">
-                                    <div class="me-3">
+                                    <div class="me-3" id="avatar-preview-container">
                                         @if($user->avatar_url)
                                             <img src="{{ $user->avatar_url }}" 
                                                  alt="Current Avatar" 
@@ -133,7 +133,7 @@
 
                         <!-- Submit Buttons -->
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('dashboard') }}" class="btn btn-secondary">
+                            <a href="{{ route('dashboard') }}" class="btn btn-secondary" id="cancel-btn">
                                 <i class="fas fa-arrow-left me-2"></i>Cancel
                             </a>
                             <button type="submit" class="btn btn-primary">
@@ -194,7 +194,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Preview avatar before upload
     const avatarInput = document.getElementById('avatar');
-    const avatarContainer = document.querySelector('.me-3');
+    const avatarContainer = document.getElementById('avatar-preview-container');
     
     avatarInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -223,16 +223,37 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const reader = new FileReader();
             reader.onload = function(e) {
+                // Only update the avatar preview in the form, not the navbar
                 avatarContainer.innerHTML = `
                     <img src="${e.target.result}" 
                          alt="New Avatar Preview" 
                          class="rounded-circle avatar-preview" 
-                         style="width: 100px; height: 100px; object-fit: cover;">
+                         style="width: 100px; height: 100px; object-fit: cover;"
+                         id="avatar-preview-image">
                 `;
             };
             reader.readAsDataURL(file);
+        } else {
+            // Reset to original avatar if no file is selected
+            resetAvatarPreview();
         }
     });
+    
+    // Function to reset avatar preview to original
+    function resetAvatarPreview() {
+        const originalAvatar = `@if($user->avatar_url)
+            <img src="{{ $user->avatar_url }}" 
+                 alt="Current Avatar" 
+                 class="rounded-circle profile-avatar" 
+                 style="width: 100px; height: 100px; object-fit: cover;">
+        @else
+            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" 
+                 style="width: 100px; height: 100px;">
+                <i class="fas fa-user fa-3x text-white"></i>
+            </div>
+        @endif`;
+        avatarContainer.innerHTML = originalAvatar;
+    }
 
     // Password field interaction
     const passwordInput = document.getElementById('password');
@@ -307,6 +328,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
+    });
+    
+    // Cancel button functionality
+    const cancelBtn = document.getElementById('cancel-btn');
+    cancelBtn.addEventListener('click', function(e) {
+        // Reset avatar preview before navigating away
+        resetAvatarPreview();
     });
     
     // Form submission with loading state
