@@ -1317,25 +1317,43 @@ class WeatherService
                 ];
             }
 
-            // Strong wind forecast (unchanged)
-            if (($day['wind_speed'] ?? 0) > 40) {
+            // Strong wind forecast (consistent with current weather)
+            if (($day['wind_speed'] ?? 0) > 50) {
                 $dayAlerts[] = [
                     'type' => 'strong_wind_forecast',
-                    'severity' => 'moderate',
+                    'severity' => 'severe',
                     'message' => 'Strong winds forecast for ' . ($day['day_name'] ?? 'upcoming day'),
                     'description' => 'Strong winds of ' . ($day['wind_speed'] ?? 0) . ' km/h forecasted for ' . ($day['day_name'] ?? 'upcoming day') . '. Secure outdoor items.',
                     'weather_data' => $day,
                     'forecast_day' => $day['day_name'] ?? 'Unknown'
                 ];
+            } elseif (($day['wind_speed'] ?? 0) > 30) {
+                $dayAlerts[] = [
+                    'type' => 'moderate_wind_forecast',
+                    'severity' => 'moderate',
+                    'message' => 'Moderate winds forecast for ' . ($day['day_name'] ?? 'upcoming day'),
+                    'description' => 'Moderate winds of ' . ($day['wind_speed'] ?? 0) . ' km/h forecasted for ' . ($day['day_name'] ?? 'upcoming day') . '. Monitor conditions.',
+                    'weather_data' => $day,
+                    'forecast_day' => $day['day_name'] ?? 'Unknown'
+                ];
             }
 
-            // Extreme temperature forecast (unchanged)
+            // Extreme temperature forecast (consistent with current weather)
             if (($day['temp_max'] ?? 0) > 38) {
                 $dayAlerts[] = [
                     'type' => 'extreme_heat_forecast',
                     'severity' => 'severe',
                     'message' => 'Extreme heat forecast for ' . ($day['day_name'] ?? 'upcoming day'),
                     'description' => 'Extreme heat of ' . ($day['temp_max'] ?? 0) . '°C forecasted for ' . ($day['day_name'] ?? 'upcoming day') . '. Take heat precautions.',
+                    'weather_data' => $day,
+                    'forecast_day' => $day['day_name'] ?? 'Unknown'
+                ];
+            } elseif (($day['temp_max'] ?? 0) > 35) {
+                $dayAlerts[] = [
+                    'type' => 'high_temperature_forecast',
+                    'severity' => 'moderate',
+                    'message' => 'High temperature forecast for ' . ($day['day_name'] ?? 'upcoming day'),
+                    'description' => 'High temperature of ' . ($day['temp_max'] ?? 0) . '°C forecasted for ' . ($day['day_name'] ?? 'upcoming day') . '. Monitor conditions.',
                     'weather_data' => $day,
                     'forecast_day' => $day['day_name'] ?? 'Unknown'
                 ];

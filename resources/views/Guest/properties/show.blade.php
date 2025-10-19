@@ -366,7 +366,7 @@
     }
     
     .modal-body {
-        max-height: 70vh;
+        max-height: 85vh;
         overflow-y: auto;
     }
     @media (max-width: 991.98px) {
