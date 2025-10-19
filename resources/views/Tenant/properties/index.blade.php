@@ -318,9 +318,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div style="display: flex; justify-content: space-between; gap: 2px;">
         `;
 
-        // Show next 4 days forecast
-        for (let i = 1; i <= 4 && i < forecast.length; i++) {
-            const day = forecast[i];
+            // Show next 4 days forecast
+            for (let i = 0; i < 4 && i < forecast.length; i++) {
+                const day = forecast[i];
             html += `
                 <div style="text-align: center; padding: 2px; background: #fff; border-radius: 3px; border: 1px solid #e0e0e0; flex: 1; min-width: 0;">
                     <div style="font-size: 9px; color: #666; margin-bottom: 1px;">${day.day_name}</div>

@@ -64,7 +64,40 @@
                 </div>
             </div>
         </div>
-    
+
+        <!-- Weather Alert Management -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">🌤️ Weather Alert Management</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <h6 class="text-center">Manual Weather Alert Triggers</h6>
+                                <p class="text-muted text-center">Manually trigger weather alerts for testing and emergency situations.</p>
+                                <div class="alert alert-success alert-sm text-center">
+                                    <small><i class="fas fa-check-circle"></i> <strong>Testing Mode</strong></small>
+                                </div>
+                                
+                                <div class="d-grid gap-2 col-md-6 mx-auto">
+                                    <button type="button" class="btn btn-warning" id="sendAllAlertsBtn">
+                                        <i class="fas fa-cloud-rain"></i> Send Alerts to All Properties
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Results Display -->
+                        <div id="alertResults" class="mt-4" style="display: none;">
+                            <h6>Results:</h6>
+                            <div id="alertResultsContent" class="alert alert-info"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <h3 class="text-center mb-4">Properties Map</h3>
    
@@ -248,7 +281,7 @@
                 `;
 
                 // Show next 4 days forecast
-                for (let i = 1; i <= 4 && i < forecast.length; i++) {
+                for (let i = 0; i < 4 && i < forecast.length; i++) {
                     const day = forecast[i];
                     html += `
                         <div style="text-align: center; padding: 2px; background: #fff; border-radius: 3px; border: 1px solid #e0e0e0; flex: 1; min-width: 0;">
@@ -388,6 +421,151 @@
                 max-height: 250px !important;
             }
         }
+        .alert-sm {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
     </style>
+
+    <!-- Weather Alert Management JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sendAllAlertsBtn = document.getElementById('sendAllAlertsBtn');
+            const alertResults = document.getElementById('alertResults');
+            const alertResultsContent = document.getElementById('alertResultsContent');
+
+            // Send alert to all properties
+            sendAllAlertsBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to send weather alerts to ALL properties? This will send real emails to landlords and tenants.')) {
+                    sendWeatherAlerts();
+                }
+            });
+
+            // Function to send weather alerts
+            function sendWeatherAlerts() {
+                const originalText = sendAllAlertsBtn.innerHTML;
+                
+                // Get CSRF token safely
+                const csrfToken = document.querySelector('meta[name="csrf-token"]');
+                if (!csrfToken) {
+                    alert('CSRF token not found. Please refresh the page and try again.');
+                    return;
+                }
+                
+                sendAllAlertsBtn.disabled = true;
+                sendAllAlertsBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                
+                fetch('/admin/weather-alerts/send-all', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken.getAttribute('content')
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    showResults(data, 'All Properties');
+                })
+                .catch(error => {
+                    console.error('Error sending weather alerts:', error);
+                    showResults({
+                        success: false,
+                        message: 'Error: ' + error.message
+                    }, 'All Properties');
+                })
+                .finally(() => {
+                    sendAllAlertsBtn.disabled = false;
+                    sendAllAlertsBtn.innerHTML = originalText;
+                });
+            }
+
+            // Function to display results
+            function showResults(data, title) {
+                let content = `<h6>${title} Results:</h6>`;
+                
+                if (data.success) {
+                    content += `<div class="alert alert-success">✅ ${data.message}</div>`;
+                    
+                    if (data.summary) {
+                        content += `
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="card bg-light">
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title">${data.summary.total_properties || 0}</h5>
+                                            <p class="card-text">Properties</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-warning text-white">
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title">${data.summary.alerts_sent || 0}</h5>
+                                            <p class="card-text">Alerts Sent</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-info text-white">
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title">${data.summary.emails_sent || 0}</h5>
+                                            <p class="card-text">Emails Sent</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-danger text-white">
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title">${data.summary.errors || 0}</h5>
+                                            <p class="card-text">Errors</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    if (data.results && data.results.length > 0) {
+                        content += '<h6 class="mt-3">Property Results:</h6>';
+                        content += '<div class="table-responsive"><table class="table table-sm">';
+                        content += '<thead><tr><th>Property</th><th>Status</th><th>Details</th></tr></thead><tbody>';
+                        
+                        data.results.forEach(result => {
+                            const statusClass = result.result.sent ? 'success' : 'warning';
+                            const statusText = result.result.sent ? '✅ Sent' : '⚠️ ' + (result.result.reason || 'No alerts');
+                            const details = result.result.sent 
+                                ? `${result.result.alert_type} (${result.result.severity}) - ${result.result.emails_sent || 1} emails`
+                                : result.result.reason || 'No alerts detected';
+                            
+                            content += `
+                                <tr>
+                                    <td>${result.property_name}</td>
+                                    <td><span class="badge bg-${statusClass}">${statusText}</span></td>
+                                    <td>${details}</td>
+                                </tr>
+                            `;
+                        });
+                        
+                        content += '</tbody></table></div>';
+                    }
+                } else {
+                    content += `<div class="alert alert-danger">❌ ${data.message}</div>`;
+                    if (data.error) {
+                        content += `<div class="alert alert-warning">Error details: ${data.error}</div>`;
+                    }
+                }
+                
+                alertResultsContent.innerHTML = content;
+                alertResults.style.display = 'block';
+                alertResults.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
 
 @endsection
