@@ -397,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
 
         // Show next 4 days forecast
-        for (let i = 1; i <= 4 && i < forecast.length; i++) {
+        for (let i = 0; i < 4 && i < forecast.length; i++) {
             const day = forecast[i];
             html += `
                 <div style="text-align: center; padding: 2px; background: #fff; border-radius: 3px; border: 1px solid #e0e0e0; flex: 1; min-width: 0;">

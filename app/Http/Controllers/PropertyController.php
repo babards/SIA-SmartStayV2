@@ -978,4 +978,57 @@ class PropertyController extends Controller
         }
     }
 
+    /**
+     * Get historical weather data for a property (past months)
+     */
+    public function getHistoricalWeatherData($id)
+    {
+        try {
+            $property = Property::findOrFail($id);
+            
+            if (!$property->latitude || !$property->longitude) {
+                return response()->json([
+                    'error' => 'Property coordinates not available'
+                ], 400);
+            }
+
+            $weatherService = new WeatherService();
+            
+            // Get historical data for the past 3 complete months
+            $historicalData = $weatherService->getHistoricalWeather(
+                $property->latitude, 
+                $property->longitude,
+                90 // This will be used for cache key, but actual data will be complete months
+            );
+
+            // Determine the actual period based on the data
+            $startDate = $historicalData[0]['date'] ?? '';
+            $endDate = end($historicalData)['date'] ?? '';
+            $period = $startDate && $endDate ? "From {$startDate} to {$endDate}" : 'Past 3 complete months';
+
+            return response()->json([
+                'success' => true,
+                'data' => $historicalData,
+                'property' => [
+                    'id' => $property->propertyID,
+                    'name' => $property->propertyName,
+                    'location' => $property->propertyLocation
+                ],
+                'period' => $period,
+                'total_days' => count($historicalData),
+                'last_updated' => now()->format('Y-m-d H:i:s')
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Historical weather data fetch error', [
+                'property_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'error' => 'Unable to fetch historical weather data'
+            ], 500);
+        }
+    }
+
 }

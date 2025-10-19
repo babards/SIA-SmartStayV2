@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\GuestPropertyController;
+use App\Http\Controllers\WeatherAlertController;
 
 Route::get('/verify-email/{token}', [EmailVerificationController::class,'verifyEmail'])
     ->name('verify.email');
@@ -33,6 +34,7 @@ Route::get('/', [App\Http\Controllers\GuestPropertyController::class, 'index'])-
 Route::get('/properties/{property}', [App\Http\Controllers\GuestPropertyController::class, 'show'])->name('guest.properties.show');
 Route::post('/properties/{propertyId}/apply', [App\Http\Controllers\GuestPropertyController::class, 'apply'])->name('guest.properties.apply');
 Route::get('/properties/{id}/weather', [PropertyController::class, 'getWeatherData'])->name('guest.properties.weather');
+Route::get('/properties/{id}/historical-weather', [PropertyController::class, 'getHistoricalWeatherData'])->name('guest.properties.historical-weather');
 
 // Authentication routes
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
@@ -141,5 +143,22 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/my-applications', [PropertyController::class, 'tenantMyApplications'])->name('applications.index');
         Route::post('/applications/{applicationId}/cancel', [PropertyController::class, 'tenantCancelApplication'])->name('applications.cancel');
         Route::get('/properties/{id}/weather', [PropertyController::class, 'getWeatherData'])->name('properties.weather');
+    });
+});
+
+// Weather Alert Routes
+Route::middleware(['auth'])->group(function () {
+    // Weather alert management routes
+    Route::prefix('weather-alerts')->name('weather-alerts.')->group(function () {
+        Route::get('/status/{propertyId}', [WeatherAlertController::class, 'getWeatherAlertStatus'])->name('status');
+        Route::post('/test/{propertyId}', [WeatherAlertController::class, 'testWeatherAlert'])->name('test');
+        Route::get('/recommendations', [WeatherAlertController::class, 'getWeatherAlertRecommendations'])->name('recommendations');
+    });
+});
+
+// Admin weather alert routes
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::prefix('admin/weather-alerts')->name('admin.weather-alerts.')->group(function () {
+        Route::post('/send-all', [WeatherAlertController::class, 'sendAllWeatherAlerts'])->name('send-all');
     });
 });
