@@ -34,7 +34,6 @@ SMARTSTAY is an innovative rental platform that revolutionizes the housing searc
 - **OpenStreetMap** - Open-source mapping and geolocation data
 - **Leaflet** - Interactive map visualization library
 - **Open-Meteo** - Weather data and forecasting API
-- **Laravel Breeze Authentication** - User authentication and authorization
 
 ### Development & Deployment
 - **GitHub** - Version control and collaboration
