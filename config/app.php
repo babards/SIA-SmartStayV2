@@ -162,5 +162,6 @@ return [
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     */
-
+    Ladumor\LaravelPwa\PWAServiceProvider::class,
+    'LaravelPwa' => \Ladumor\LaravelPwa\LaravelPwa::class,
 ];

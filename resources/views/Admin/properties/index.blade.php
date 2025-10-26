@@ -33,8 +33,8 @@
                 <div class="col-md-3">
                     <select name="location_filter" class="form-select" onchange="this.form.submit()">
                         <option value="">All Locations</option>
-                        @foreach(config('app.bukidnon_cities_municipalities') as $lgu)
-                            <option value="{{ $lgu }}" {{ request('location_filter') == $lgu ? 'selected' : '' }}>{{ $lgu }}</option>
+                        @foreach($uniqueLocations as $location)
+                            <option value="{{ $location }}" {{ request('location_filter') == $location ? 'selected' : '' }}>{{ $location }}</option>
                         @endforeach
                     </select>
                 </div>

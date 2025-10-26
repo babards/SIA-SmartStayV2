@@ -2,9 +2,26 @@
 <html lang="en">
 
 <head>
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#6777ef"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="SmartStay">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileColor" content="#6777ef">
+    <meta name="msapplication-tap-highlight" content="no">
+    
+    <!-- PWA Icons and Manifest -->
+    <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('logo.png') }}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('logo.png') }}">
+    <link rel="manifest" href="{{ asset('/manifest.json') }}">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>SmartStay</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -156,6 +173,7 @@
         </div>
     @endif
 
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
 
@@ -254,6 +272,23 @@
                 });
             }
         });
+    </script>
+    
+    
+    <!-- Service Worker Registration -->
+    <script>
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js", {
+            scope: '/'
+        }).then(
+        (registration) => {
+            console.log("Service worker registered successfully");
+        },
+        (error) => {
+            console.error(`Service worker registration failed: ${error}`);
+        }
+        );
+    }
     </script>
 </body>
 

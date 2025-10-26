@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Property;
 use App\Models\PropertyApplication;
 use Illuminate\Support\Facades\Mail;
+use App\Services\ReverseGeocodingService;
 
 class GuestPropertyController extends Controller
 {
@@ -100,6 +101,19 @@ class GuestPropertyController extends Controller
         }
 
         $properties = $query->orderBy('propertyCreatedAt', 'desc')->paginate(9);
-        return view('welcome', compact('properties'));
+        
+        // Extract unique cities/municipalities from all properties
+        $uniqueLocations = $this->extractUniqueLocations();
+        
+        return view('welcome', compact('properties', 'uniqueLocations'));
+    }
+    
+    /**
+     * Extract unique cities/municipalities from all property coordinates
+     */
+    private function extractUniqueLocations()
+    {
+        $reverseGeocodingService = new ReverseGeocodingService();
+        return $reverseGeocodingService->getUniqueCitiesFromProperties();
     }
 }
