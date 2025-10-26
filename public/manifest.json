@@ -1,0 +1,27 @@
+{
+    "name": "SmartStay - Weather-Integrated Rental Platform",
+    "short_name": "SmartStay",
+    "start_url": "/",
+    "background_color": "#6777ef",
+    "description": "SmartStay - Weather-Integrated Rental Platform",
+    "display": "standalone",
+    "theme_color": "#6777ef",
+    "orientation": "portrait-primary",
+    "scope": "/",
+    "categories": ["productivity", "utilities"],
+    "lang": "en",
+    "icons": [
+        {
+            "src": "/logo.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/logo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

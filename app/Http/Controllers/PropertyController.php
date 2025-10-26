@@ -18,6 +18,7 @@ use App\Mail\BoarderKickedMail;
 use App\Mail\ApplicationReceivedMail;
 use App\Mail\ApplicationCancelledMail;
 use App\Services\WeatherService;
+use App\Services\ReverseGeocodingService;
 
 class PropertyController extends Controller
 {
@@ -81,8 +82,11 @@ class PropertyController extends Controller
         }
 
         $properties = $query->orderBy('propertyCreatedAt', 'desc')->paginate(8);
+        
+        // Extract unique cities/municipalities from all properties
+        $uniqueLocations = $this->extractUniqueLocations();
 
-        return view('landlord.properties.index', compact('properties'));
+        return view('landlord.properties.index', compact('properties', 'uniqueLocations'));
     }
 
     public function store(Request $request)
@@ -305,8 +309,11 @@ class PropertyController extends Controller
 
         $properties = $query->orderBy('propertyCreatedAt', 'desc')->paginate(8);
         $landlords = User::where('role', 'landlord')->orderBy('first_name')->get(); // Fetch landlords for dropdowns
+        
+        // Extract unique cities/municipalities from all properties
+        $uniqueLocations = $this->extractUniqueLocations();
 
-        return view('admin.properties.index', compact('properties', 'landlords')); // Pass landlords to the index view
+        return view('admin.properties.index', compact('properties', 'landlords', 'uniqueLocations')); // Pass landlords and unique locations to the index view
     }
 
     public function adminstore(Request $request)
@@ -564,7 +571,11 @@ class PropertyController extends Controller
         }
 
         $properties = $query->orderBy('propertyCreatedAt', 'desc')->paginate(9);
-        return view('tenant.properties.index', compact('properties'));
+        
+        // Extract unique cities/municipalities from all properties
+        $uniqueLocations = $this->extractUniqueLocations();
+        
+        return view('tenant.properties.index', compact('properties', 'uniqueLocations'));
     }
 
     public function tenantShow($id)
@@ -1029,6 +1040,15 @@ class PropertyController extends Controller
                 'error' => 'Unable to fetch historical weather data'
             ], 500);
         }
+    }
+
+    /**
+     * Extract unique cities/municipalities from all property coordinates
+     */
+    private function extractUniqueLocations()
+    {
+        $reverseGeocodingService = new ReverseGeocodingService();
+        return $reverseGeocodingService->getUniqueCitiesFromProperties();
     }
 
 }
