@@ -1,45 +1,96 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="card shadow-sm" style="width: 100%; max-width: 400px;">
-    <div class="card-body p-4">
-        <h4 class="text-center mb-4">{{ __('Two Factor Authentication') }}</h4>
+<style>
+    .verification-input {
+        letter-spacing: 3px;
+        font-size: 1.2rem;
+        text-align: center;
+        font-weight: 600;
+    }
+    
+    .timer-text {
+        font-size: 0.9rem;
+        color: #6c757d;
+        font-weight: 500;
+    }
+    
+    .btn-verify {
+        transition: transform 0.2s;
+    }
+    
+    .btn-verify:hover {
+        transform: translateY(-1px);
+    }
+    
+    .alert {
+        border: none !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+</style>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-5">
+            <div class="card shadow-lg p-5" style="border-radius: 20px; border: none; background: linear-gradient(to bottom right, #ffffff, #f8f9fa);">
+                <div class="text-center mb-4">
+                    <img src="{{ asset('images/logo1.png') }}" alt="SmartStay Logo" class="mb-3" style="height: 180px; width: auto; object-fit: contain;">
+                    <h2 class="text-center mb-2" style="color: #2596be; font-weight: 700; letter-spacing: -0.5px;">SmartStay</h2>
+                    <p class="text-muted">Security verification required</p>
+                </div>
 
-        @if (session('message'))
-            <div class="alert alert-info" role="alert">
-                {{ session('message') }}
-            </div>
-        @endif
+                <h4 class="text-center mb-2" style="color: #2596be;">{{ __('Two Factor Authentication') }}</h4>
+                <p class="text-center text-muted mb-4">Enter the verification code sent to your email</p>
 
-        @if (session('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ session('error') }}
-            </div>
-        @endif
+                @if (session('message'))
+                    <div class="alert alert-info alert-dismissible fade show" role="alert"
+                         style="border-radius: 10px; border: none; background-color: #cff4fc; color: #055160;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        {{ session('message') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                         style="border-radius: 10px; border: none; background-color: #f8d7da; color: #842029;">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
 
         <form id="verifyForm" method="POST" action="{{ route('2fa.verify') }}">
             @csrf
 
-            <div class="mb-3">
-                <label for="two_factor_code" class="form-label">{{ __('2FA Code') }}</label>
-                <input id="two_factor_code" type="text" 
-                    class="form-control @error('two_factor_code') is-invalid @enderror" 
-                    name="two_factor_code" 
-                    required 
-                    autocomplete="off" 
-                    autofocus>
-                <div id="codeError" class="invalid-feedback"></div>
+            <div class="mb-4">
+                <label for="two_factor_code" class="form-label text-muted mb-2">{{ __('2FA Code') }}</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-key text-muted"></i></span>
+                    <input id="two_factor_code" type="text" 
+                        class="form-control bg-light border-start-0 @error('two_factor_code') is-invalid @enderror" 
+                        name="two_factor_code" 
+                        required 
+                        autocomplete="off" 
+                        autofocus
+                        placeholder="Enter 6-digit code"
+                        style="letter-spacing: 3px; font-size: 1.2rem;">
+                    <div id="codeError" class="invalid-feedback"></div>
+                </div>
             </div>
-            <div id="timerText" class="mb-2 text-center text-muted"></div>
+            <div id="timerText" class="mb-3 text-center text-muted" style="font-size: 0.9rem;"></div>
 
-            <div class="d-grid gap-2 mb-3">
-                <button type="submit" id="verifyBtn" class="btn btn-primary">
-                    {{ __('Verify Code') }}
+            <div class="d-grid gap-3 mb-3">
+                <button type="submit" id="verifyBtn" class="btn btn-primary btn-lg fw-semibold"
+                    style="border-radius: 10px; padding: 12px; background: linear-gradient(135deg, #2596be 0%, #1e7898 100%); border: none; box-shadow: 0 4px 6px rgba(37, 150, 190, 0.2);">
+                    <i class="fas fa-shield-check me-2"></i>{{ __('Verify Code') }}
                 </button>
-                <button type="button" id="resendBtn" class="btn btn-secondary d-none" onclick="resendCode()">
+                <button type="button" id="resendBtn" class="btn btn-outline-secondary btn-lg fw-semibold d-none" 
+                    onclick="resendCode()"
+                    style="border-radius: 10px; padding: 12px;">
                     <i class="fas fa-sync me-2"></i>Resend Code
                 </button>
-                <a href="{{ route('login') }}" class="btn btn-link text-center">
+                <a href="{{ route('login') }}" class="btn btn-link text-center text-decoration-none text-muted"
+                   style="transition: color 0.3s ease;">
                     <i class="fas fa-arrow-left me-2"></i>Back to Login
                 </a>
             </div>
@@ -209,10 +260,5 @@
 
     // Start the initial timer
     startTimer();
-
-    // Handle expired code (server-side session check)
-    @if(session('expired'))
-        handleCodeExpired();
-    @endif
 </script>
 @endsection 

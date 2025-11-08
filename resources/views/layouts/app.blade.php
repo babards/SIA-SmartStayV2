@@ -41,6 +41,7 @@
                     style="top:0; left:0; height:100vh; width:240px; z-index:1030;">
                     <!-- Header -->
                     <div class="text-center py-3 border-bottom" style="border-color: rgba(255, 255, 255, 0.2) !important;">
+                        <img src="{{ asset('images/logo1.png') }}" alt="SmartStay Logo" class="mb-2" style="height: 40px; width: auto; object-fit: contain;">
                         <h5 class="mb-0 text-white fw-bold" style="font-size: 1.5rem; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">SmartStay</h5>
                     </div>
 
@@ -316,8 +317,8 @@
 
     .sidebar {
         min-height: 100vh;
-        background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
-        border-right: 1px solid #1e40af;
+        background: linear-gradient(180deg, #2596be 0%, #1e7898 50%, #166d8b 100%);
+        border-right: 1px solid #1e7898;
         position: fixed;
         top: 0;
         left: 0;
@@ -326,7 +327,7 @@
         z-index: 1030;
         overflow-y: auto;
         overflow-x: hidden;
-        box-shadow: 2px 0 10px rgba(30, 58, 138, 0.1);
+        box-shadow: 2px 0 10px rgba(37, 150, 190, 0.1);
     }
 
     .sidebar .nav-link {
@@ -344,16 +345,16 @@
     }
 
     .sidebar .nav-link:hover {
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+        background: linear-gradient(135deg, #2596be 0%, #1e7898 100%) !important;
         color: white !important;
         transform: translateX(4px);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        box-shadow: 0 4px 12px rgba(37, 150, 190, 0.3);
     }
 
     .sidebar .nav-link.active {
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+        background: linear-gradient(135deg, #2596be 0%, #166d8b 100%) !important;
         color: white !important;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        box-shadow: 0 4px 12px rgba(37, 150, 190, 0.4);
         font-weight: 600;
     }
 
@@ -388,7 +389,7 @@
 
     .sidebar .user-avatar:hover {
         transform: scale(1.05);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+        box-shadow: 0 4px 15px rgba(37, 150, 190, 0.3) !important;
     }
 
     .sidebar .user-info {
@@ -396,7 +397,7 @@
     }
 
     .sidebar .user-section {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(37, 150, 190, 0.1);
         transition: all 0.3s ease;
         border-radius: 12px;
         margin: 8px;
@@ -458,15 +459,15 @@
 
     /* Gradient background for default avatar */
     .avatar-gradient {
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        background: linear-gradient(135deg, #2596be 0%, #166d8b 100%);
     }
 
     .avatar-gradient-alt {
-        background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+        background: linear-gradient(135deg, #2596be 0%, #1e7898 100%);
     }
 
     .avatar-gradient-blue {
-        background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+        background: linear-gradient(135deg, #1e7898 0%, #166d8b 100%);
     }
 
     /* Responsive Design */
