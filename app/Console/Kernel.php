@@ -12,21 +12,19 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // Run weather alerts every hour
+        // Run weather alerts at 6:00 AM Philippines time
         $schedule->command('weather:send-alerts')
-                 ->hourly()
+                 ->dailyAt('06:00')
+                 ->timezone('Asia/Manila')
                  ->withoutOverlapping()
                  ->runInBackground();
 
-        // Alternative: Run weather alerts daily at 8:00 AM
-        // $schedule->command('weather:send-alerts')
-        //          ->dailyAt('08:00')
-        //          ->withoutOverlapping();
-
-        // Alternative: Run weather alerts every 6 hours
-        // $schedule->command('weather:send-alerts')
-        //          ->everySixHours()
-        //          ->withoutOverlapping();
+        // Run weather alerts at 12:00 PM (noon) Philippines time
+        $schedule->command('weather:send-alerts')
+                 ->dailyAt('12:00')
+                 ->timezone('Asia/Manila')
+                 ->withoutOverlapping()
+                 ->runInBackground();
     }
 
     /**

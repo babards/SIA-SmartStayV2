@@ -1,0 +1,104 @@
+# ========================================
+# SmartStay - Railway Environment Variables
+# ========================================
+# Copy these to Railway Dashboard > Your Service > Variables
+# Replace values in <brackets> with your actual values
+
+# Application
+APP_NAME=SmartStay
+APP_ENV=production
+APP_KEY=<generate-with-php-artisan-key:generate-show>
+APP_DEBUG=false
+APP_URL=<your-railway-url.up.railway.app>
+
+# Database (Railway auto-fills these - DO NOT manually add)
+# PGHOST=<auto-filled>
+# PGPORT=<auto-filled>
+# PGDATABASE=<auto-filled>
+# PGUSER=<auto-filled>
+# PGPASSWORD=<auto-filled>
+
+# Session & Cache
+SESSION_DRIVER=database
+CACHE_DRIVER=file
+QUEUE_CONNECTION=database
+SESSION_LIFETIME=120
+
+# Logging
+LOG_CHANNEL=stack
+LOG_LEVEL=error
+
+# ========================================
+# OPTIONAL - Email Configuration
+# ========================================
+# Only add these if you want email functionality
+
+# For Gmail (Use App Password):
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=<your-email@gmail.com>
+MAIL_PASSWORD=<your-gmail-app-password>
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=<your-email@gmail.com>
+MAIL_FROM_NAME=SmartStay
+
+# ========================================
+# FREE SMTP Alternatives:
+# ========================================
+
+# Mailtrap (Free: 500 emails/month)
+# MAIL_MAILER=smtp
+# MAIL_HOST=smtp.mailtrap.io
+# MAIL_PORT=2525
+# MAIL_USERNAME=<your-mailtrap-username>
+# MAIL_PASSWORD=<your-mailtrap-password>
+# MAIL_ENCRYPTION=tls
+
+# SendGrid (Free: 100 emails/day)
+# MAIL_MAILER=smtp
+# MAIL_HOST=smtp.sendgrid.net
+# MAIL_PORT=587
+# MAIL_USERNAME=apikey
+# MAIL_PASSWORD=<your-sendgrid-api-key>
+# MAIL_ENCRYPTION=tls
+
+# Mailgun (Free: 5,000 emails/month)
+# MAIL_MAILER=smtp
+# MAIL_HOST=smtp.mailgun.org
+# MAIL_PORT=587
+# MAIL_USERNAME=<your-mailgun-smtp-username>
+# MAIL_PASSWORD=<your-mailgun-smtp-password>
+# MAIL_ENCRYPTION=tls
+
+# ========================================
+# Weather API
+# ========================================
+# Open-Meteo is FREE and requires NO API KEY!
+# Your app is already configured to use it.
+# No additional environment variables needed.
+
+# ========================================
+# File Storage (Optional)
+# ========================================
+# By default, files are stored locally.
+# For production with persistent storage, consider:
+# - Railway Volumes (add in Railway Dashboard)
+# - AWS S3 (free tier: 5GB)
+# - Cloudinary (free tier: 25GB)
+
+# ========================================
+# PWA Configuration
+# ========================================
+# Already configured in your app
+# No additional variables needed
+
+# ========================================
+# Notes:
+# ========================================
+# 1. Generate APP_KEY with: php artisan key:generate --show
+# 2. Don't add quotes around values in Railway
+# 3. Database variables are auto-filled by Railway PostgreSQL
+# 4. After adding variables, redeploy your app
+# 5. Check deployment logs if issues occur
+

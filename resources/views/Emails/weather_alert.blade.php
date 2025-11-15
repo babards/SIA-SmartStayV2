@@ -136,8 +136,10 @@
         @if($userType === 'tenant')
             <p>We are sending you this weather alert for the property you are boarding at: <strong>{{ $property->propertyName }}</strong> located at <strong>{{ $property->propertyLocation }}</strong>.</p>
             <p>As a tenant at this property, it's important for you to be aware of severe weather conditions that may affect your safety and the property.</p>
+            
         @else
             <p>We are sending you this weather alert for your property <strong>{{ $property->propertyName }}</strong> located at <strong>{{ $property->propertyLocation }}</strong>.</p>
+            <p>As a landlord, it's important for you to be aware of severe weather conditions that may affect your property and your tenants.</p>
         @endif
 
         <div class="property-info">
@@ -254,7 +256,7 @@
         @endif
 
         <div class="recommendations">
-            <h3>🛡️ Smart Recommendations</h3>
+            <h3>🛡️ Recommendations</h3>
             <ul>
                 @if($userType === 'tenant')
                     @if(($alertData['severity'] ?? 'moderate') === 'severe')
@@ -331,14 +333,7 @@
         <div class="footer">
             <p>This is an automated weather alert from SmartStay.</p>
             <p>For immediate weather emergencies, please contact local authorities.</p>
-            <p>SmartStay - Your Smart Property Management Solution</p>
-            <p><small>You are receiving this alert because you have weather notifications enabled for this property. 
-            @if($userType === 'tenant')
-                As a tenant, you receive alerts for properties you are boarding at.
-            @else
-                As a property owner, you receive alerts for your properties.
-            @endif
-            </small></p>
+            <p>SmartStay - Your Weather-Integrated Property Management Solution</p>
         </div>
     </div>
 </body>

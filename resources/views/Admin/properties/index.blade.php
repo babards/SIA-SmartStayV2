@@ -64,6 +64,13 @@
 
         <div class="row">
             @forelse($properties as $property)
+                @php
+                    $statusDisplay = [
+                        'Available' => 'Available',
+                        'Fullyoccupied' => 'Fully Occupied',
+                        'Maintenance' => 'Maintenance'
+                    ];
+                @endphp
                 <div class="col-md-3 mb-4" id="property-card-{{ $property->propertyID }}">
                     <div class="card h-100 d-flex flex-column shadow-sm property-card">
                         <a href="{{ route('admin.properties.show', $property->propertyID) }}" style="text-decoration: none; color: inherit;">
@@ -75,21 +82,37 @@
                                     style="height: 160px; object-fit: cover;" alt="No Image">
                             @endif
                             <div class="card-body pb-5">
-                                <h5 class="card-title">{{ $property->propertyName }}</h5>
-                                <p class="card-text">{{ Str::limit($property->propertyDescription, 50) }}</p>
-                                <p class="card-text"><strong>Location:</strong> {{ $property->propertyLocation }}</p>
-                                <p class="card-text text-muted mb-1">₱{{ number_format($property->propertyRent, 2) }}</p>
-                                <p class="card-text text-muted mb-1">Status: 
-                                    {{ $statusDisplay[$property->propertyStatus] ?? $property->propertyStatus }}
-                                </p>
-                                <p class="card-text text-muted mb-1">Landlord: {{ $property->landlord->first_name ?? 'N/A' }}
-                                    {{ $property->landlord->last_name ?? '' }}
-                                </p>
+                                <h5 class="card-title"><i class="fas fa-home text-primary me-2" style="min-width: 16px;"></i>{{ $property->propertyName }}</h5>
+                                <div class="d-flex align-items-start mb-1">
+                                    <i class="fas fa-map-marker-alt text-muted me-2 mt-1" style="min-width: 16px;"></i>
+                                    <p class="card-text mb-0 small" style="word-break: break-word;">{{ $property->propertyLocation }}</p>
+                                </div>
+                                <div class="d-flex align-items-center mb-1">
+                                    <i class="fas fa-peso-sign text-muted me-2" style="min-width: 16px;"></i>
+                                    <p class="card-text mb-0 small">₱{{ number_format($property->propertyRent, 2) }}</p>
+                                </div>
+                                <div class="d-flex align-items-center mb-1">
+                                    <i class="fas fa-info-circle text-muted me-2" style="min-width: 16px;"></i>
+                                    <p class="card-text mb-0 small">
+                                        {{ $statusDisplay[$property->propertyStatus] ?? $property->propertyStatus }}
+                                    </p>
+                                </div>
+                                <div class="d-flex align-items-center mb-1">
+                                    <i class="fas fa-user-tie text-muted me-2" style="min-width: 16px;"></i>
+                                    <p class="card-text mb-0 small">{{ $property->landlord->first_name ?? 'N/A' }}
+                                        {{ $property->landlord->last_name ?? '' }}</p>
+                                </div>
 
                                 @if ($property->number_of_boarders >= $property->vacancy)
-                                    <p class="card-text text-muted mb-1"><strong>Vacant:</strong> {{ $property->number_of_boarders ?? 0 }}/{{ $property->vacancy ?? 0 }} (Fully Occupied)</p>
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="fas fa-users text-muted me-2" style="min-width: 16px;"></i>
+                                        <p class="card-text mb-0 small">{{ $property->number_of_boarders ?? 0 }}/{{ $property->vacancy ?? 0 }} (Fully Occupied)</p>
+                                    </div>
                                 @else
-                                    <p class="card-text text-muted mb-1"><strong>Vacant:</strong> {{ $property->number_of_boarders ?? 0 }}/{{ $property->vacancy ?? 0 }}</p>
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="fas fa-users text-muted me-2" style="min-width: 16px;"></i>
+                                        <p class="card-text mb-0 small">{{ $property->number_of_boarders ?? 0 }}/{{ $property->vacancy ?? 0 }}</p>
+                                    </div>
                                 @endif
                             </div>
                         </a>
@@ -1078,14 +1101,100 @@
     .property-card:hover {
         transform: translateY(-2px);
     }
+    .property-img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+    }
+    .leaflet-control-zoom-reset {
+        font-size: 18px;
+        line-height: 26px;
+        text-align: center;
+        text-decoration: none;
+        color: black;
+        display: block;
+        width: 26px;
+        height: 26px;
+    }
+    .leaflet-control-zoom-reset:hover {
+        background-color: #f4f4f4;
+        color: black;
+    }
+    #propertiesMap {
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .leaflet-popup {
+        max-width: 500px !important;
+    }
+    .leaflet-popup-content-wrapper {
+        border-radius: 8px;
+        box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+        max-width: 500px !important;
+    }
+    .leaflet-popup-content {
+        margin: 8px 12px;
+        line-height: 1.3;
+        word-wrap: break-word;
+        max-width: 470px !important;
+        max-height: 350px !important;
+        overflow-y: auto;
+    }
+    .leaflet-popup-tip {
+        max-width: 500px !important;
+    }
+    .custom-popup .leaflet-popup-content-wrapper {
+        max-width: 500px !important;
+        max-height: 400px !important;
+    }
+    .custom-popup .leaflet-popup-content {
+        max-height: 350px !important;
+        overflow-y: auto;
+    }
+    
+    /* Responsive design for mobile devices */
+    @media (max-width: 768px) {
+        .leaflet-popup {
+            max-width: 90vw !important;
+        }
+        .leaflet-popup-content-wrapper {
+            max-width: 90vw !important;
+        }
+        .leaflet-popup-content {
+            max-width: calc(90vw - 30px) !important;
+            max-height: 300px !important;
+        }
+        .custom-popup .leaflet-popup-content-wrapper {
+            max-width: 90vw !important;
+            max-height: 350px !important;
+        }
+        .custom-popup .leaflet-popup-content {
+            max-height: 300px !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .leaflet-popup {
+            max-width: 95vw !important;
+        }
+        .leaflet-popup-content-wrapper {
+            max-width: 95vw !important;
+        }
+        .leaflet-popup-content {
+            max-width: calc(95vw - 20px) !important;
+            max-height: 250px !important;
+        }
+        .custom-popup .leaflet-popup-content-wrapper {
+            max-width: 95vw !important;
+            max-height: 300px !important;
+        }
+        .custom-popup .leaflet-popup-content {
+            max-height: 250px !important;
+        }
+    }
 </style>
 @endpush
 
 @push('scripts')
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize the map with enhanced controls
@@ -1309,105 +1418,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-
-<style>
-    .property-img {
-        width: 100%;
-        height: 160px;
-        object-fit: cover;
-    }
-    .leaflet-control-zoom-reset {
-        font-size: 18px;
-        line-height: 26px;
-        text-align: center;
-        text-decoration: none;
-        color: black;
-        display: block;
-        width: 26px;
-        height: 26px;
-    }
-    .leaflet-control-zoom-reset:hover {
-        background-color: #f4f4f4;
-        color: black;
-    }
-    #propertiesMap {
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .leaflet-popup {
-        max-width: 500px !important;
-    }
-    .leaflet-popup-content-wrapper {
-        border-radius: 8px;
-        box-shadow: 0 3px 14px rgba(0,0,0,0.4);
-        max-width: 500px !important;
-    }
-    .leaflet-popup-content {
-        margin: 8px 12px;
-        line-height: 1.3;
-        word-wrap: break-word;
-        max-width: 470px !important;
-        max-height: 350px !important;
-        overflow-y: auto;
-    }
-    .leaflet-popup-tip {
-        max-width: 500px !important;
-    }
-    .custom-popup .leaflet-popup-content-wrapper {
-        max-width: 500px !important;
-        max-height: 400px !important;
-    }
-    .custom-popup .leaflet-popup-content {
-        max-height: 350px !important;
-        overflow-y: auto;
-    }
-    
-    /* Responsive design for mobile devices */
-    @media (max-width: 768px) {
-        .leaflet-popup {
-            max-width: 90vw !important;
-        }
-        .leaflet-popup-content-wrapper {
-            max-width: 90vw !important;
-        }
-        .leaflet-popup-content {
-            max-width: calc(90vw - 30px) !important;
-            max-height: 300px !important;
-        }
-        .custom-popup .leaflet-popup-content-wrapper {
-            max-width: 90vw !important;
-            max-height: 350px !important;
-        }
-        .custom-popup .leaflet-popup-content {
-            max-height: 300px !important;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        .leaflet-popup {
-            max-width: 95vw !important;
-        }
-        .leaflet-popup-content-wrapper {
-            max-width: 95vw !important;
-        }
-        .leaflet-popup-content {
-            max-width: calc(95vw - 20px) !important;
-            max-height: 250px !important;
-        }
-        .custom-popup .leaflet-popup-content-wrapper {
-            max-width: 95vw !important;
-            max-height: 300px !important;
-        }
-        .custom-popup .leaflet-popup-content {
-            max-height: 250px !important;
-        }
-    }
-</style>
 @endpush
-
-@php
-    $statusDisplay = [
-        'Available' => 'Available',
-        'Fullyoccupied' => 'Fully Occupied',
-        'Maintenance' => 'Maintenance'
-    ];
-@endphp

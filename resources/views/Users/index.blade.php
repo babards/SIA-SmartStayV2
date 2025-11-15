@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <div class="card-header text-white d-flex justify-content-between align-items-center" style="background-color: #2596be;">
                         <h4 class="mb-0">User Management</h4>
                         <button class="btn btn-light btn-sm text-primary" data-bs-toggle="modal"
                             data-bs-target="#createUserModal">
@@ -98,6 +98,7 @@
                                                 <button class="btn btn-sm btn-warning editUserBtn" data-id="{{ $user->id }}"
                                                     data-first_name="{{ $user->first_name }}"
                                                     data-last_name="{{ $user->last_name }}" data-email="{{ $user->email }}"
+                                                    data-phone_number="{{ $user->phone_number ?? '' }}"
                                                     data-role="{{ $user->role }}" data-avatar="{{ $user->avatar_url }}"
                                                     data-bs-toggle="modal" data-bs-target="#editUserModal">
                                                     <i class="fas fa-edit"></i>
@@ -147,6 +148,10 @@
                         <div class="mb-3">
                             <label>Email</label>
                             <input type="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Phone Number</label>
+                            <input type="tel" name="phone_number" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label>Role</label>
@@ -211,6 +216,10 @@
                             <input type="email" name="email" id="editEmail" class="form-control" required>
                         </div>
                         <div class="mb-3">
+                            <label>Phone Number</label>
+                            <input type="tel" name="phone_number" id="editPhoneNumber" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
                             <label>Role</label>
                             <select name="role" id="editRole" class="form-select" required>
                                 <option value="admin">Admin</option>
@@ -261,6 +270,7 @@
                     document.getElementById('editFirstName').value = this.dataset.first_name;
                     document.getElementById('editLastName').value = this.dataset.last_name;
                     document.getElementById('editEmail').value = this.dataset.email;
+                    document.getElementById('editPhoneNumber').value = this.dataset.phone_number || '';
                     document.getElementById('editRole').value = this.dataset.role;
                     document.getElementById('editUserForm').action = '/admin/users/' + this.dataset.id;
 

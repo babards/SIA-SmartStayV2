@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('pads', function (Blueprint $table) {
-            $table->integer('number_of_boarders')->default(0)->after('padStatus');
+        Schema::table('logs', function (Blueprint $table) {
+            $table->dropColumn('ip_address');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('pads', function (Blueprint $table) {
-            $table->dropColumn('number_of_boarders');
+        Schema::table('logs', function (Blueprint $table) {
+            $table->ipAddress('ip_address')->nullable();
         });
     }
 };

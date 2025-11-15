@@ -84,6 +84,14 @@
                                     </div>
                                 </div>
 
+                                <!-- Tenant Phone Number -->
+                                <div class="mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-phone text-muted me-2"></i>
+                                        <span class="text-muted">{{ $boarder->tenant->phone_number ?? 'N/A' }}</span>
+                                    </div>
+                                </div>
+
                                 <!-- Duration -->
                                 <div class="mb-3">
                                     <div class="d-flex align-items-center">
@@ -101,12 +109,12 @@
 
                                 <!-- Property Location -->
                                 <div class="mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-map-marker-alt text-muted me-2"></i>
-                                        <span class="text-muted text-truncate">{{ $boarder->property->propertyLocation ?? 'N/A' }}</span>
+                                    <div class="d-flex align-items-start">
+                                        <i class="fas fa-map-marker-alt text-muted me-2 mt-1"></i>
+                                        <span class="text-muted" style="word-break: break-word;">{{ $boarder->property->propertyLocation ?? 'N/A' }}</span>
                                     </div>
                                 </div>
-
+                                
                                 <!-- Actions -->
                                 <div class="mt-auto">
                                     @if($boarder->status == 'active')

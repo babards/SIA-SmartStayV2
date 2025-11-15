@@ -106,6 +106,10 @@
 
                         <!-- Landlord Navigation -->
                         @if(auth()->user()->role === 'landlord')
+                            <a class="nav-link {{ Route::currentRouteName() === 'landlord.dashboard' ? 'active' : '' }}"
+                                href="{{ route('landlord.dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                            </a>
                             <a class="nav-link {{ Route::currentRouteName() === 'landlord.properties.index' ? 'active' : '' }}"
                                 href="{{ route('landlord.properties.index') }}">
                                 <i class="fas fa-home me-2"></i>Manage Properties

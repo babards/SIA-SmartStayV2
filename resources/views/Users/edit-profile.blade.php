@@ -89,6 +89,19 @@
                             @enderror
                         </div>
 
+                        <div class="mb-3">
+                            <label for="phone_number" class="form-label">Phone Number</label>
+                            <input type="tel" 
+                                   class="form-control @error('phone_number') is-invalid @enderror" 
+                                   id="phone_number" 
+                                   name="phone_number" 
+                                   value="{{ old('phone_number', $user->phone_number) }}" 
+                                   required>
+                            @error('phone_number')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <!-- Password Change Section -->
                         <hr class="my-4">
                         <div class="password-section">

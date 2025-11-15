@@ -84,6 +84,12 @@
                                 </div>
                             </div>
 
+                            <div class="mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-phone text-muted me-2"></i>
+                                        <span class="text-muted">{{ $application->tenant->phone_number ?? 'N/A' }}</span>
+                                    </div>
+                                </div>
                             <!-- Application Date -->
                             <div class="mb-3">
                                 <div class="d-flex align-items-center">
