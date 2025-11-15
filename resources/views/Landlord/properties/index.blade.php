@@ -9,39 +9,37 @@
             Create New Property
         </button>
     </div>
-    <div class="row align-items-end mb-3">
-            <div class="col">
-                <form method="GET" action="{{ route('landlord.properties.index') }}" class="mb-4 flex-grow-1 me-3">
-                    <div class="row g-3 align-items-end">
-                        <div class="col-md-5">
-                            <div class="input-group">
-                                <input type="text" name="search" class="form-control" placeholder="Search properties..." value="{{ request('search') }}">
-                                <button class="btn btn-primary" type="submit">Search</button>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <select name="location_filter" class="form-select" onchange="this.form.submit()">
-                                <option value="">All Locations</option>
-                                @foreach($uniqueLocations as $location)
-                                    <option value="{{ $location }}" {{ request('location_filter') == $location ? 'selected' : '' }}>{{ $location }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <select name="price_filter" class="form-select" onchange="this.form.submit()">
-                                <option value="">All Prices</option>
-                                <option value="below_1000" {{ request('price_filter') == 'below_1000' ? 'selected' : '' }}>Below ₱1,000</option>
-                                <option value="1000_2000" {{ request('price_filter') == '1000_2000' ? 'selected' : '' }}>₱1,000 - ₱2,000</option>
-                                <option value="2000_3000" {{ request('price_filter') == '2000_3000' ? 'selected' : '' }}>₱2,000 - ₱3,000</option>
-                                <option value="above_3000" {{ request('price_filter') == 'above_3000' ? 'selected' : '' }}>Above ₱3,000</option>
-                            </select>
-                        </div>
-                        <div class="col-md-1">
-                            <a href="{{ route('landlord.properties.index') }}" class="btn btn-outline-secondary w-100">Reset</a>
-                        </div>
-                    </div>
-                </form>
+    
+    <form method="GET" action="{{ route('landlord.properties.index') }}" class="mb-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Search properties..." value="{{ request('search') }}">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
             </div>
+            <div class="col-md-4">
+                <select name="location_filter" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Locations</option>
+                    @foreach($uniqueLocations as $location)
+                        <option value="{{ $location }}" {{ request('location_filter') == $location ? 'selected' : '' }}>{{ $location }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="price_filter" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Prices</option>
+                    <option value="below_1000" {{ request('price_filter') == 'below_1000' ? 'selected' : '' }}>Below ₱1,000</option>
+                    <option value="1000_2000" {{ request('price_filter') == '1000_2000' ? 'selected' : '' }}>₱1,000 - ₱2,000</option>
+                    <option value="2000_3000" {{ request('price_filter') == '2000_3000' ? 'selected' : '' }}>₱2,000 - ₱3,000</option>
+                    <option value="above_3000" {{ request('price_filter') == 'above_3000' ? 'selected' : '' }}>Above ₱3,000</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <a href="{{ route('landlord.properties.index') }}" class="btn btn-outline-secondary w-100">Reset</a>
+            </div>
+        </div>
+    </form>
 
     <div class="row" id="property-list">
     @foreach ($properties as $property)
@@ -52,13 +50,19 @@
                         <img src="{{ asset('storage/' . $property->main_image) }}" class="card-img-top"
                             style="height: 160px; object-fit: cover;">
                     @else
-                        <img src="https://via.placeholder.com/300x160?text=No+Image" class="card-img-top"
-                            style="height: 160px; object-fit: cover;">
-                    @endif
-                    <div class="card-body flex-grow-1">
-                        <h5 class="card-title">{{ $property->propertyName }}</h5>
-                        <p class="card-text">{{ $property->propertyLocation }}</p>
-                        <p class="card-text text-muted mb-1">₱{{ number_format($property->propertyRent, 2) }}</p>
+                    <img src="https://via.placeholder.com/300x160?text=No+Image" class="card-img-top"
+                        style="height: 160px; object-fit: cover;">
+                @endif
+                    <div class="card-body pb-5">
+                        <h5 class="card-title"><i class="fas fa-home text-primary me-2" style="min-width: 16px;"></i>{{ $property->propertyName }}</h5>
+                        <div class="d-flex align-items-start mb-1">
+                            <i class="fas fa-map-marker-alt text-muted me-2 mt-1" style="min-width: 16px;"></i>
+                            <p class="card-text mb-0 small" style="word-break: break-word;">{{ $property->propertyLocation }}</p>
+                        </div>
+                        <div class="d-flex align-items-center mb-1">
+                            <i class="fas fa-peso-sign text-muted me-2" style="min-width: 16px;"></i>
+                            <p class="card-text mb-0 small">₱{{ number_format($property->propertyRent, 2) }}</p>
+                        </div>
                         @php
                             $statusDisplay = [
                                 'Available' => 'Available',
@@ -66,27 +70,35 @@
                                 'Maintenance' => 'Maintenance'
                             ];
                         @endphp
-                        <p class="card-text text-muted mb-1">Status: 
-                            {{ $statusDisplay[$property->propertyStatus] ?? $property->propertyStatus }}
-                        </p>
+                        <div class="d-flex align-items-center mb-1">
+                            <i class="fas fa-info-circle text-muted me-2" style="min-width: 16px;"></i>
+                            <p class="card-text mb-0 small">
+                                {{ $statusDisplay[$property->propertyStatus] ?? $property->propertyStatus }}
+                            </p>
+                        </div>
                         @if ($property->number_of_boarders >= $property->vacancy)
-                            <p class="card-text text-muted mb-1"><strong>Vacant:</strong> {{ $property->number_of_boarders ?? 0 }}/{{ $property->vacancy ?? 0 }} (Fully Occupied)</p>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="fas fa-users text-muted me-2" style="min-width: 16px;"></i>
+                                <p class="card-text mb-0 small">{{ $property->number_of_boarders ?? 0 }}/{{ $property->vacancy ?? 0 }} (Fully Occupied)</p>
+                            </div>
                         @else
-                            <p class="card-text text-muted mb-1"><strong>Vacant:</strong> {{ $property->number_of_boarders ?? 0 }}/{{ $property->vacancy ?? 0 }}</p>
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="fas fa-users text-muted me-2" style="min-width: 16px;"></i>
+                                <p class="card-text mb-0 small">{{ $property->number_of_boarders ?? 0 }}/{{ $property->vacancy ?? 0 }}</p>
+                            </div>
                         @endif
                     </div>
                 </a>
-                <div class="card-footer bg-white border-0 d-flex justify-content-end gap-2 mt-auto">
-                    <button class="btn btn-warning btn-sm editPropertyBtn" data-id="{{ $property->propertyID }}"
-                        data-name="{{ $property->propertyName }}" data-description="{{ $property->propertyDescription }}"
-                        data-location="{{ $property->propertyLocation }}" data-rent="{{ $property->propertyRent }}"
-                        data-status="{{ $property->propertyStatus }}" data-latitude="{{ $property->latitude }}"
-                        data-longitude="{{ $property->longitude }}" data-vacancy="{{ $property->vacancy }}"
-                        data-bs-toggle="modal" data-bs-target="#editPropertyModal"
+                <div class="card-footer bg-white border-0 d-flex align-items-end gap-2 justify-content-end position-absolute w-100" style="bottom: 0; right: 0; min-height: 40px; background: transparent;">
+                    <button type="button" class="btn btn-warning btn-sm editPropertyBtn p-1" data-bs-toggle="modal"
+                        data-bs-target="#editPropertyModal" data-id="{{ $property->propertyID }}" data-name="{{ $property->propertyName }}"
+                        data-description="{{ $property->propertyDescription }}" data-location="{{ $property->propertyLocation }}"
+                        data-rent="{{ $property->propertyRent }}" data-status="{{ $property->propertyStatus }}"
+                        data-latitude="{{ $property->latitude }}" data-longitude="{{ $property->longitude }}" data-vacancy="{{ $property->vacancy }}"
                         style="color:#000;">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn btn-danger btn-sm deletePropertyBtn" data-id="{{ $property->propertyID }}"
+                    <button class="btn btn-danger btn-sm deletePropertyBtn p-1" data-id="{{ $property->propertyID }}"
                         data-name="{{ $property->propertyName }}" data-bs-toggle="modal" data-bs-target="#deletePropertyModal"
                         style="color:#fff;">
                         <i class="fas fa-trash"></i>

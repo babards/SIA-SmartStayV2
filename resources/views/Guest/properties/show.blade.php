@@ -87,21 +87,21 @@
                                     </button>
                                 </div>
                                 
-                                <h2 class="card-title mb-3">{{ $property->propertyName }}</h2>
+                                <h2 class="card-title mb-3"><i class="fas fa-home text-primary me-2" style="min-width: 16px;"></i>{{ $property->propertyName }}</h2>
                                 <div class="row mb-2">
-                                    <div class="col-5 text-muted fw-bold">Description:</div>
+                                    <div class="col-5 text-muted fw-bold"><i class="fas fa-align-left me-2"></i>Description:</div>
                                     <div class="col-7">{{ $property->propertyDescription ?? '-' }}</div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-5 text-muted fw-bold">Location:</div>
+                                    <div class="col-5 text-muted fw-bold"><i class="fas fa-map-marker-alt me-2"></i>Location:</div>
                                     <div class="col-7">{{ $property->propertyLocation }}</div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-5 text-muted fw-bold">Rent:</div>
+                                    <div class="col-5 text-muted fw-bold"><i class="fas fa-peso-sign me-2"></i>Rent:</div>
                                     <div class="col-7">₱{{ number_format($property->propertyRent, 2) }}</div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-5 text-muted fw-bold">Status:</div>
+                                    <div class="col-5 text-muted fw-bold"><i class="fas fa-info-circle me-2"></i>Status:</div>
                                     <div class="col-7">
                                         @php
                                             $statusDisplay = [
@@ -121,17 +121,17 @@
                                     </div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-5 text-muted fw-bold">Landlord:</div>
+                                    <div class="col-5 text-muted fw-bold"><i class="fas fa-user-tie me-2"></i>Landlord:</div>
                                     <div class="col-7">
                                         {{ $property->landlord->first_name ?? 'N/A' }} {{ $property->landlord->last_name ?? '' }}
                                     </div>
                                 </div>
                                 <div class="row mb-2">
                                     @if ($property->number_of_boarders >= $property->vacancy)
-                                        <div class="col-5 text-muted fw-bold">Vacant:</div>
+                                        <div class="col-5 text-muted fw-bold"><i class="fas fa-users me-2"></i>Vacant:</div>
                                         <div class="col-7">Fully Occupied</div>
                                     @else
-                                        <div class="col-5 text-muted fw-bold">Vacant:</div>
+                                        <div class="col-5 text-muted fw-bold"><i class="fas fa-users me-2"></i>Vacant:</div>
                                         <div class="col-7">{{ $property->number_of_boarders ?? 0 }}/{{ $property->vacancy ?? 0 }}</div>
                                     @endif
                                 </div>

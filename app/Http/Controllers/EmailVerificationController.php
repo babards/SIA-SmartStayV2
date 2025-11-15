@@ -16,7 +16,7 @@ class EmailVerificationController extends Controller
         $user = User::where('verification_token', $token)->first();
 
         if (!$user) {
-            $this->logActivity('email_verification_failed', "Failed email verification attempt with invalid token");
+            $this->logActivity('email_verification_failed', "Failed email verification attempt with invalid token", null);
             return redirect()->route('login')->with('error', 'Invalid verification token.');
         }
 
@@ -24,7 +24,7 @@ class EmailVerificationController extends Controller
         $user->verification_token = null;
         $user->save();
 
-        $this->logActivity('email_verification_success', "Email verified for: {$user->email}");
+        $this->logActivity('email_verification_success', "Email verified for: {$user->email}", $user->id);
         return redirect()->route('login')->with('crud_success', 'Email verified successfully. You can now login.');
     }
 }

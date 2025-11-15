@@ -55,33 +55,47 @@
                             </a>
 
                             @if($property->propertyStatus == 'Available')
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#applyPropertyModal">
-                                    <i class="fas fa-file-alt me-1"></i>Apply for this Property
-                                </button>
+                                @if(isset($isActiveBoarder) && $isActiveBoarder)
+                                    <button type="button" class="btn btn-secondary" disabled title="You cannot apply for other properties because you are already an active boarder.">
+                                        <i class="fas fa-file-alt me-1"></i>Apply for this Property
+                                    </button>
+                                @else
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#applyPropertyModal">
+                                        <i class="fas fa-file-alt me-1"></i>Apply for this Property
+                                    </button>
+                                @endif
                             @endif
                             
                             <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#weatherDataModal" id="weatherDataBtn">
                                 <i class="fas fa-cloud-sun me-1"></i>View Weather Data
                             </button>
                         </div>
+
+                        <!-- Warning message for active boarders (full width) -->
+                        @if($property->propertyStatus == 'Available' && isset($isActiveBoarder) && $isActiveBoarder)
+                            <div class="alert alert-warning mb-4" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <strong>Notice:</strong> You cannot apply for other properties because you are already an active boarder.
+                            </div>
+                        @endif
                         
-                        <h2 class="card-title mb-3">{{ $property->propertyName }}</h2>
+                        <h2 class="card-title mb-3"><i class="fas fa-home text-primary me-2" style="min-width: 16px;"></i>{{ $property->propertyName }}</h2>
 
                         <div class="row mb-2">
-                            <div class="col-5 text-muted fw-bold">Description:</div>
+                            <div class="col-5 text-muted fw-bold"><i class="fas fa-align-left me-2"></i>Description:</div>
                             <div class="col-7">{{ $property->propertyDescription ?? '-' }}</div>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-5 text-muted fw-bold">Location:</div>
+                            <div class="col-5 text-muted fw-bold"><i class="fas fa-map-marker-alt me-2"></i>Location:</div>
                             <div class="col-7">{{ $property->propertyLocation }}</div>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-5 text-muted fw-bold">Rent:</div>
+                            <div class="col-5 text-muted fw-bold"><i class="fas fa-peso-sign me-2"></i>Rent:</div>
                             <div class="col-7">₱{{ number_format($property->propertyRent, 2) }}</div>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-5 text-muted fw-bold">Status:</div>
+                            <div class="col-5 text-muted fw-bold"><i class="fas fa-info-circle me-2"></i>Status:</div>
                             <div class="col-7">
                                 @php
                                     $statusDisplay = [
@@ -100,17 +114,17 @@
                             </div>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-5 text-muted fw-bold">Landlord:</div>
+                            <div class="col-5 text-muted fw-bold"><i class="fas fa-user-tie me-2"></i>Landlord:</div>
                             <div class="col-7">
                                 {{ $property->landlord->first_name ?? 'N/A' }} {{ $property->landlord->last_name ?? '' }}
                             </div>
                         </div>
                         <div class="row mb-2">
                             @if ($property->number_of_boarders >= $property->vacancy)
-                                <div class="col-5 text-muted fw-bold">Vacant:</div>
+                                <div class="col-5 text-muted fw-bold"><i class="fas fa-users me-2"></i>Vacant:</div>
                                 <div class="col-7">Fully Occupied</div>
                             @else
-                                <div class="col-5 text-muted fw-bold">Vacant:</div>
+                                <div class="col-5 text-muted fw-bold"><i class="fas fa-users me-2"></i>Vacant:</div>
                                 <div class="col-7">{{ $property->number_of_boarders ?? 0 }}/{{ $property->vacancy ?? 0 }}</div>
                             @endif
                         </div>
@@ -134,27 +148,38 @@
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title w-100 text-center" id="applyPropertyModalLabel">Apply Property</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="d-flex justify-content-between mb-2 fw-bold">
-                            <div>
-                                {{ Auth::user()->name ?? Auth::user()->first_name . ' ' . Auth::user()->last_name }}<br>
-                                <span class="fw-normal" style="font-size: 0.9em;">
-                                    {{ Auth::user()->email }}<br>
-                                </span>
+                        <div class="mb-3">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-home text-primary me-2"></i>{{ $property->propertyName }}</h6>
+                            
+                            <div class="d-flex align-items-start mb-2">
+                                <i class="fas fa-user-tie text-muted me-2 mt-1"></i>
+                                <div>
+                                    <small class="text-muted d-block">Landlord:</small>
+                                    <span>{{ $property->landlord->first_name ?? '' }} {{ $property->landlord->last_name ?? '' }}</span>
+                                </div>
                             </div>
-                            <div class="text-end">
-                                {{ $property->propertyName }}<br>
-                                <span class="fw-normal" style="font-size: 0.9em;">
-                                    {{ $property->landlord->first_name ?? '' }} {{ $property->landlord->last_name ?? '' }}<br>
-                                    {{ $property->propertyLocation }}
-                                </span>
+                            
+                            <div class="d-flex align-items-start mb-2">
+                                <i class="fas fa-phone text-muted me-2 mt-1"></i>
+                                <div>
+                                    <small class="text-muted d-block">Phone:</small>
+                                    <span>{{ $property->landlord->phone_number ?? 'N/A' }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-start mb-3">
+                                <i class="fas fa-map-marker-alt text-muted me-2 mt-1"></i>
+                                <div>
+                                    <small class="text-muted d-block">Location:</small>
+                                    <span>{{ $property->propertyLocation }}</span>
+                                </div>
                             </div>
                         </div>
                         <hr>
                         <div class="mb-3">
-                            <label for="message" class="form-label">Message:</label>
+                            <label for="message" class="form-label"><i class="fas fa-comment me-2"></i>Message:</label>
                             <textarea name="message" id="message" class="form-control" rows="5" required></textarea>
                         </div>
                     </div>

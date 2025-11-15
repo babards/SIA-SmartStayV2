@@ -63,6 +63,7 @@ class UserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name'  => 'required|string|max:255',
             'email'      => 'required|email|unique:users,email',
+            'phone_number' => 'required|string|max:20',
             'role'       => 'required|in:admin,tenant,landlord',
             'password'   => 'required|string|min:6',
         ]);
@@ -71,6 +72,7 @@ class UserController extends Controller
             'first_name' => $request->first_name,
             'last_name'  => $request->last_name,
             'email'      => $request->email,
+            'phone_number' => $request->phone_number,
             'role'       => $request->role,
             'password'   => Hash::make($request->password),
         ]);
@@ -107,6 +109,7 @@ class UserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name'  => 'required|string|max:255',
             'email'      => 'required|email|unique:users,email,' . $user->id,
+            'phone_number' => 'required|string|max:20',
             'role'       => 'required|in:admin,tenant,landlord',
             'password'   => 'nullable|string|min:6',
             'avatar'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -176,6 +179,7 @@ class UserController extends Controller
         $user->first_name = $request->first_name;
         $user->last_name  = $request->last_name;
         $user->email      = $request->email;
+        $user->phone_number = $request->phone_number;
         $user->role       = $request->role;
 
         if ($request->filled('password')) {
@@ -226,6 +230,7 @@ class UserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name'  => 'required|string|max:255',
             'email'      => 'required|email|unique:users,email,' . $user->id,
+            'phone_number' => 'required|string|max:20',
             'current_password' => 'required_with:password|nullable|string',
             'password'   => 'nullable|string|min:6|confirmed',
             'avatar'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -314,6 +319,7 @@ class UserController extends Controller
         $user->first_name = $request->first_name;
         $user->last_name  = $request->last_name;
         $user->email      = $request->email;
+        $user->phone_number = $request->phone_number;
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);

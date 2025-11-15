@@ -581,7 +581,13 @@ class PropertyController extends Controller
     public function tenantShow($id)
     {
         $property = \App\Models\Property::findOrFail($id);
-        return view('tenant.properties.show', compact('property'));
+        
+        // Check if the current tenant is already an active boarder
+        $isActiveBoarder = PropertyBoarder::where('user_id', Auth::id())
+            ->where('status', 'active')
+            ->exists();
+        
+        return view('tenant.properties.show', compact('property', 'isActiveBoarder'));
     }
 
 
@@ -594,6 +600,15 @@ class PropertyController extends Controller
         $request->validate([
             'message' => 'required|string|max:2000',
         ]);
+
+        // Check if tenant is already an active boarder in another property
+        $activeBoarder = PropertyBoarder::where('user_id', $tenant->id)
+            ->where('status', 'active')
+            ->first();
+
+        if ($activeBoarder) {
+            return redirect()->back()->with('crud_error', 'You cannot apply for other properties because you are already an active boarder.');
+        }
 
         $existingApplication = PropertyApplication::where('property_id', $property->propertyID)
             ->where('user_id', $tenant->id)
@@ -702,13 +717,32 @@ class PropertyController extends Controller
                 'status' => 'active',
             ]);
 
+            // Automatically cancel all other pending applications for this tenant
+            $otherApplications = PropertyApplication::with(['property.landlord'])->where('user_id', $application->user_id)
+                ->where('id', '!=', $applicationId)
+                ->where('status', 'pending')
+                ->get();
+
+            $cancelledCount = 0;
+            foreach ($otherApplications as $otherApp) {
+                $otherApp->status = 'cancelled';
+                $otherApp->save();
+                $cancelledCount++;
+
+                // Notify the LANDLORD of the other property that the application was auto-cancelled
+                $otherLandlord = $otherApp->property->landlord;
+                if ($otherLandlord && $otherLandlord->email) {
+                    Mail::to($otherLandlord->email)->send(new ApplicationCancelledMail($otherApp));
+                }
+            }
+
             // Send approval email
             if ($tenant && $tenant->email) {
                 Mail::to($tenant->email)->send(new ApplicationApprovedMail($application));
             }
 
             $tenantInfo = $tenant ? $tenant->first_name . ' ' . $tenant->last_name . ' (' . $tenant->email . ')' : 'Unknown Tenant';
-            $this->logActivity('approve_application', "Approved application for property: {$property->propertyName} | Tenant: {$tenantInfo}");
+            $this->logActivity('approve_application', "Approved application for property: {$property->propertyName} | Tenant: {$tenantInfo} | Auto-cancelled {$cancelledCount} other pending applications");
 
             return redirect()->back()->with('crud_success', 'Application approved successfully.');
         }

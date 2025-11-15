@@ -33,6 +33,7 @@ class AuthController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'phone_number' => 'required|string|max:20',
             'password' => 'required|string|min:6|confirmed',
             'role' => 'required|in:tenant,landlord',
         ]);
@@ -41,6 +42,7 @@ class AuthController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
+            'phone_number' => $request->phone_number,
             'password' => Hash::make($request->password),
             'role' => $request->role,
             'is_verified' => 0,
@@ -48,7 +50,7 @@ class AuthController extends Controller
         ]);
 
         Mail::to($user->email)->send(new VerifyEmail($user));
-        $this->logActivity('register', "New user registration: {$user->first_name} {$user->last_name} ({$user->email})");
+        $this->logActivity('register', "New user registration: {$user->first_name} {$user->last_name} ({$user->email})", $user->id);
         return redirect('/login')->with('message', 'Please check your email to verify your account before logging in.');
     }
 
@@ -78,7 +80,7 @@ class AuthController extends Controller
 
         // 🔒 Check if user exists and is locked
         if ($user && $user->locked) {
-            $this->logActivity('login_locked', "Attempt to login on locked account: {$user->email}");
+            $this->logActivity('login_locked', "Attempt to login on locked account: {$user->email}", $user->id);
             return back()->with('error', 'Your account is locked. Please contact an administrator.');
         }
 
@@ -93,7 +95,7 @@ class AuthController extends Controller
 
             // Email not verified
             if (!$user->is_verified) {
-                $this->logActivity('login_failed', "Login failed - Unverified email: {$request->email}");
+                $this->logActivity('login_failed', "Login failed - Unverified email: {$request->email}", $user->id);
                 return back()->with('error', 'Please verify your email before logging in.');
             }
 
@@ -103,7 +105,7 @@ class AuthController extends Controller
             $user->save();
 
             Mail::to($user->email)->send(new \App\Mail\TwoFactorCodeMail($user));
-            $this->logActivity('login_2fa_required', "2FA code sent to: {$user->email}");
+            $this->logActivity('login_2fa_required', "2FA code sent to: {$user->email}", $user->id);
 
             $request->session()->put('2fa_user_id', $user->id);
             return redirect()->route('2fa.verify.form')->with('message', 'Please check your email for the 2FA code.');
@@ -117,12 +119,12 @@ class AuthController extends Controller
                 $user->locked = true;
                 $user->save();
 
-                $this->logActivity('account_locked', "User account locked: {$user->email}");
+                $this->logActivity('account_locked', "User account locked: {$user->email}", $user->id);
                 return back()->with('error', 'Your account has been locked due to too many failed login attempts. Contact admin.');
             }
         }
 
-        $this->logActivity('login_failed', "Failed login attempt: {$request->email}");
+        $this->logActivity('login_failed', "Failed login attempt: {$request->email}", $user->id ?? null);
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
@@ -140,7 +142,7 @@ class AuthController extends Controller
         $user = User::find($userId);
 
         if (!$user) {
-            $this->logActivity('2fa_failed', '2FA failed: user not found');
+            $this->logActivity('2fa_failed', '2FA failed: user not found', null);
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => 'User not found.']);
             }
@@ -148,7 +150,7 @@ class AuthController extends Controller
         }
 
         if (!$user->two_factor_code || !$user->two_factor_expires_at) {
-            $this->logActivity('2fa_failed', '2FA failed: no code found');
+            $this->logActivity('2fa_failed', '2FA failed: no code found', $user->id);
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => 'No 2FA code found. Please try logging in again.']);
             }
@@ -156,7 +158,7 @@ class AuthController extends Controller
         }
 
         if (now()->gt($user->two_factor_expires_at)) {
-            $this->logActivity('2fa_failed', '2FA failed: code expired');
+            $this->logActivity('2fa_failed', '2FA failed: code expired', $user->id);
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => '2FA code has expired. Please try logging in again.']);
             }
@@ -164,7 +166,7 @@ class AuthController extends Controller
         }
 
         if ($user->two_factor_code !== $request->two_factor_code) {
-            $this->logActivity('2fa_failed', "Failed 2FA verification for: {$user->email}");
+            $this->logActivity('2fa_failed', "Failed 2FA verification for: {$user->email}", $user->id);
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => 'Invalid 2FA code.']);
             }
@@ -179,7 +181,7 @@ class AuthController extends Controller
 
         Auth::login($user);
         $request->session()->forget('2fa_user_id');
-        $this->logActivity('2fa_success', "Successful 2FA verification for: {$user->email}");
+        $this->logActivity('2fa_success', "Successful 2FA verification for: {$user->email}", $user->id);
 
         if ($request->expectsJson()) {
             return response()->json(['success' => true, 'redirect_url' => url('/dashboard')]);
@@ -218,7 +220,7 @@ class AuthController extends Controller
         $user->two_factor_expires_at = now()->addMinutes(2);
         $user->save();
         Mail::to($user->email)->send(new TwoFactorCodeMail($user));
-        $this->logActivity('2fa_resend', "2FA code resent to: {$user->email}");
+        $this->logActivity('2fa_resend', "2FA code resent to: {$user->email}", $user->id);
         return response()->json(['success' => true, 'message' => 'A new code has been sent to your email.']);
     }
 

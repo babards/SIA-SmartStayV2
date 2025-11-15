@@ -113,6 +113,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Landlord routes
     Route::middleware(['role:landlord'])->prefix('landlord')->name('landlord.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'landlordDashboard'])->name('dashboard');
         Route::get('/properties', [PropertyController::class, 'index'])->name('properties.index');
         Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');
         Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');

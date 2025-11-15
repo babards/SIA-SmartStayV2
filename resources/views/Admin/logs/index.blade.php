@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header bg-primary text-white d-flex align-items-center">
+                <div class="card-header text-white d-flex align-items-center" style="background-color: #2596be;">
                     <h3 class="card-title mb-0">System Logs</h3>
                 </div>
                 <div class="card-body">
@@ -51,6 +51,13 @@
                                     <input type="date" name="date_to" class="form-control" placeholder="To Date" value="{{ request('date_to') }}" onchange="this.form.submit()">
                                 </div>
                             </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <a href="{{ route('admin.logs.index') }}" class="btn btn-outline-secondary w-100">
+                                        <i class="fas fa-redo me-1"></i>Reset Filters
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </form>
                     
@@ -62,7 +69,6 @@
                                     <th class="py-2">User</th>
                                     <th class="py-2">Action</th>
                                     <th class="py-2">Description</th>
-                                    <th class="py-2">IP Address</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,15 +76,14 @@
                                     <tr>
                                         <td class="py-2">{{ $log->created_at->format('Y-m-d H:i:s') }}</td>
                                         <td class="py-2">
-                                            @if($log->user)
-                                                {{ $log->user->first_name }} {{ $log->user->last_name }}
-                                            @else
+                                            @if($log->display_user === 'Guest')
                                                 <span class="text-muted">Guest</span>
+                                            @else
+                                                <span class="text">{{ $log->display_user }}</span>
                                             @endif
                                         </td>
                                         <td class="py-2">{{ ucfirst($log->action) }}</td>
                                         <td class="py-2">{{ $log->description }}</td>
-                                        <td class="py-2">{{ $log->ip_address }}</td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -89,7 +94,7 @@
                         </table>
                     </div>
                     <div class="mt-3">
-                        {{ $logs->links('pagination::bootstrap-5') }}
+                        {{ $logs->appends(request()->query())->links('pagination::bootstrap-5') }}
                     </div>
                 </div>
             </div>

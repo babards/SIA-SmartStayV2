@@ -78,6 +78,19 @@
           </div>
 
           <div class="mb-3">
+              <label for="phone_number" class="form-label fw-semibold mb-2" style="color: #2596be; opacity: 0.8;">{{ __('Phone Number') }}</label>
+              <div class="input-group input-group-lg">
+                <span class="input-group-text border-end-0" style="background: rgba(37, 150, 190, 0.03);"><i class="fas fa-phone" style="color: #2596be; opacity: 0.7;"></i></span>
+                <input id="phone_number" type="tel" class="form-control border-start-0 @error('phone_number') is-invalid @enderror" 
+                  style="background: rgba(37, 150, 190, 0.03); color: #2596be; font-size: 1rem;"
+                name="phone_number" value="{{ old('phone_number') }}" required autocomplete="tel" placeholder="Enter your phone number">
+              @error('phone_number')
+              <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+              @enderror
+            </div>
+          </div>
+
+          <div class="mb-3">
               <label for="password" class="form-label fw-semibold mb-2" style="color: #2596be; opacity: 0.8;">{{ __('Password') }}</label>
               <div class="input-group input-group-lg">
                 <span class="input-group-text border-end-0" style="background: rgba(37, 150, 190, 0.03);"><i class="fas fa-lock" style="color: #2596be; opacity: 0.7;"></i></span>

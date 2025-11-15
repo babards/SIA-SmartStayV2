@@ -6,6 +6,7 @@
         <!-- Sidebar -->
         <div class="sidebar d-flex flex-column align-items-start py-4 position-fixed" style="top:0; left:0; height:100vh; width:240px; z-index:1030;">
             <div class="text-center mb-4 w-100">
+                <img src="{{ asset('images/logo1.png') }}" alt="SmartStay Logo" class="mb-2" style="height: 40px; width: auto; object-fit: contain;">
                 <h4 class="fw-bold text-white" style="letter-spacing:1px; font-size: 1.5rem; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">SmartStay</h4>
             </div>
             <nav class="nav flex-column w-100">
@@ -74,9 +75,15 @@
                                         <img src="https://via.placeholder.com/400x200?text=No+Image" class="card-img-top property-img" alt="No Image">
                                     @endif
                                     <div class="card-body">
-                                        <h5 class="card-title">{{ $property->propertyName }}</h5>
-                                        <p class="card-text mb-1"><strong>Location:</strong> {{ $property->propertyLocation }}</p>
-                                        <p class="card-text mb-1"><strong>Rent:</strong> ₱{{ number_format($property->propertyRent, 2) }}</p>
+                                        <h5 class="card-title"><i class="fas fa-home text-primary me-2" style="min-width: 16px;"></i>{{ $property->propertyName }}</h5>
+                                        <div class="d-flex align-items-start mb-1">
+                                            <i class="fas fa-map-marker-alt text-muted me-2 mt-1" style="min-width: 16px;"></i>
+                                            <p class="card-text mb-0 small" style="word-break: break-word;">{{ $property->propertyLocation }}</p>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-1">
+                                            <i class="fas fa-peso-sign text-muted me-2" style="min-width: 16px;"></i>
+                                            <p class="card-text mb-0 small">₱{{ number_format($property->propertyRent, 2) }}</p>
+                                        </div>
                                         @php
                                             $statusDisplay = [
                                                 'Available' => 'Available',
@@ -84,7 +91,21 @@
                                                 'Maintenance' => 'Maintenance'
                                             ];
                                         @endphp
-                                        <p class="card-text mb-1"><strong>Status:</strong> {{ $statusDisplay[$property->propertyStatus] ?? $property->propertyStatus }}</p>
+                                        <div class="d-flex align-items-center mb-1">
+                                            <i class="fas fa-info-circle text-muted me-2" style="min-width: 16px;"></i>
+                                            <p class="card-text mb-0 small">{{ $statusDisplay[$property->propertyStatus] ?? $property->propertyStatus }}</p>
+                                        </div>
+                                        @if ($property->number_of_boarders >= $property->vacancy)
+                                            <div class="d-flex align-items-center mb-1">
+                                                <i class="fas fa-users text-muted me-2" style="min-width: 16px;"></i>
+                                                <p class="card-text mb-0 small">{{ $property->number_of_boarders ?? 0 }}/{{ $property->vacancy ?? 0 }} (Fully Occupied)</p>
+                                            </div>
+                                        @else
+                                            <div class="d-flex align-items-center mb-1">
+                                                <i class="fas fa-users text-muted me-2" style="min-width: 16px;"></i>
+                                                <p class="card-text mb-0 small">{{ $property->number_of_boarders ?? 0 }}/{{ $property->vacancy ?? 0 }}</p>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </a>

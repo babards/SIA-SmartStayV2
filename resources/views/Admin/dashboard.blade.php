@@ -10,55 +10,46 @@
 
         <div class="row">
             <!-- User Statistics -->
-            <div class="col-md-4 mb-4">
-                <div class="card">
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">User Statistics</h5>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Total Users:</span>
-                            <span class="fw-bold">{{ $stats['total_users'] }}</span>
+                        <h5 class="card-title mb-3">
+                            <i class="fas fa-users text-primary me-2"></i>User Statistics
+                        </h5>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span><i class="fas fa-user-friends text-secondary me-2"></i>Total Users:</span>
+                            <span class="badge bg-primary rounded-pill px-3 py-2 fs-6">{{ $stats['total_users'] }}</span>
                         </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Landlords:</span>
-                            <span class="fw-bold">{{ $stats['total_landlords'] }}</span>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span><i class="fas fa-user-tie text-secondary me-2"></i>Landlords:</span>
+                            <span class="badge bg-info rounded-pill px-3 py-2 fs-6">{{ $stats['total_landlords'] }}</span>
                         </div>
-                        <div class="d-flex justify-content-between">
-                            <span>Tenants:</span>
-                            <span class="fw-bold">{{ $stats['total_tenants'] }}</span>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-user text-secondary me-2"></i>Tenants:</span>
+                            <span class="badge bg-success rounded-pill px-3 py-2 fs-6">{{ $stats['total_tenants'] }}</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Property Statistics -->
-            <div class="col-md-4 mb-4">
-                <div class="card">
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">Property Statistics</h5>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Total Properties:</span>
-                            <span class="fw-bold">{{ $stats['total_properties'] }}</span>
+                        <h5 class="card-title mb-3">
+                            <i class="fas fa-building text-primary me-2"></i>Property Statistics
+                        </h5>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span><i class="fas fa-home text-secondary me-2"></i>Total Properties:</span>
+                            <span class="badge bg-primary rounded-pill px-3 py-2 fs-6">{{ $stats['total_properties'] }}</span>
                         </div>
-                        <div class="d-flex justify-content-between">
-                            <span>Available Properties:</span>
-                            <span class="fw-bold">{{ $stats['available_properties'] }}</span>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span><i class="fas fa-check-circle text-secondary me-2"></i>Available Properties:</span>
+                            <span class="badge bg-success rounded-pill px-3 py-2 fs-6">{{ $stats['available_properties'] }}</span>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Application Statistics -->
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Application Statistics</h5>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Total Applications:</span>
-                            <span class="fw-bold">{{ $stats['total_applications'] }}</span>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <span>Pending Applications:</span>
-                            <span class="fw-bold">{{ $stats['pending_applications'] }}</span>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-users text-secondary me-2"></i>Fully Occupied:</span>
+                            <span class="badge bg-info rounded-pill px-3 py-2 fs-6">{{ $stats['occupied_properties'] }}</span>
                         </div>
                     </div>
                 </div>
@@ -76,10 +67,7 @@
                         <div class="row justify-content-center">
                             <div class="col-md-8">
                                 <h6 class="text-center">Manual Weather Alert Triggers</h6>
-                                <p class="text-muted text-center">Manually trigger weather alerts for testing and emergency situations.</p>
-                                <div class="alert alert-success alert-sm text-center">
-                                    <small><i class="fas fa-check-circle"></i> <strong>Testing Mode</strong></small>
-                                </div>
+                                <p class="text-muted text-center">Manually trigger weather alerts for emergency situations.</p>
                                 
                                 <div class="d-grid gap-2 col-md-6 mx-auto">
                                     <button type="button" class="btn btn-warning" id="sendAllAlertsBtn">
