@@ -19,12 +19,12 @@ class AuthController extends Controller
 
     public function showLoginForm()
     {
-        return view('auth.login');
+        return view('Auth.login');
     }
 
     public function showRegisterForm()
     {
-        return view('auth.register');
+        return view('Auth.register');
     }
 
     public function register(Request $request)
@@ -206,7 +206,7 @@ class AuthController extends Controller
         if (!session()->has('2fa_user_id')) {
             return redirect()->route('login')->with('error', 'Please login first.');
         }
-        return view('auth.2fa-verify');
+        return view('Auth.two-factor');
     }
 
     public function resend2FACode(Request $request)

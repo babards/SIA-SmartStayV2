@@ -13,7 +13,7 @@ class TwoFactorAuthController extends Controller
 {
     public function verifyForm()
     {
-        return view('auth.two-factor');
+        return view('Auth.two-factor');
     }
         public function verify(Request $request)
     {
