@@ -21,7 +21,7 @@ SMARTSTAY is an innovative rental platform that revolutionizes the housing searc
 
 ## 🏗️ Technology Stack
 ### Frontend
-- **Tailwind CSS** - Responsive design framework
+- **Bootstrap CSS** - CSS Framework
 - **Javascript** - Enhanced user experience and interactivity
 
 ### Backend
