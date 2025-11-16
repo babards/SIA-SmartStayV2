@@ -86,7 +86,7 @@ class PropertyController extends Controller
         // Extract unique cities/municipalities from all properties
         $uniqueLocations = $this->extractUniqueLocations();
 
-        return view('landlord.properties.index', compact('properties', 'uniqueLocations'));
+        return view('Landlord.properties.index', compact('properties', 'uniqueLocations'));
     }
 
     public function store(Request $request)
@@ -235,7 +235,7 @@ class PropertyController extends Controller
     public function show($id)
     {
         $property = \App\Models\Property::findOrFail($id);
-        return view('landlord.properties.show', compact('property'));
+        return view('Landlord.properties.show', compact('property'));
     }
 
     // Admin view of all properties
@@ -313,7 +313,7 @@ class PropertyController extends Controller
         // Extract unique cities/municipalities from all properties
         $uniqueLocations = $this->extractUniqueLocations();
 
-        return view('admin.properties.index', compact('properties', 'landlords', 'uniqueLocations')); // Pass landlords and unique locations to the index view
+        return view('Admin.properties.index', compact('properties', 'landlords', 'uniqueLocations')); // Pass landlords and unique locations to the index view
     }
 
     public function adminstore(Request $request)
@@ -501,7 +501,7 @@ class PropertyController extends Controller
     {
         $property = \App\Models\Property::findOrFail($id);
         $landlords = \App\Models\User::where('role', 'landlord')->orderBy('first_name')->get();
-        return view('admin.properties.show', compact('property', 'landlords'));
+        return view('Admin.properties.show', compact('property', 'landlords'));
     }
 
     // Tenant view of available properties
@@ -575,7 +575,7 @@ class PropertyController extends Controller
         // Extract unique cities/municipalities from all properties
         $uniqueLocations = $this->extractUniqueLocations();
         
-        return view('tenant.properties.index', compact('properties', 'uniqueLocations'));
+        return view('Tenant.properties.index', compact('properties', 'uniqueLocations'));
     }
 
     public function tenantShow($id)
@@ -587,7 +587,7 @@ class PropertyController extends Controller
             ->where('status', 'active')
             ->exists();
         
-        return view('tenant.properties.show', compact('property', 'isActiveBoarder'));
+        return view('Tenant.properties.show', compact('property', 'isActiveBoarder'));
     }
 
 
@@ -674,7 +674,7 @@ class PropertyController extends Controller
         }
 
         $applications = $applications->orderBy('application_date', 'desc')->paginate(10);
-        return view('tenant.applications.index', compact('applications'));
+        return view('Tenant.applications.index', compact('applications'));
     }
 
     // Landlord views applications for a specific property
@@ -686,7 +686,7 @@ class PropertyController extends Controller
             ->orderBy('application_date', 'desc')
             ->paginate(10);
 
-        return view('landlord.properties.application', compact('property', 'applications'));
+        return view('Landlord.properties.application', compact('property', 'applications'));
     }
 
     // Landlord approves an application
@@ -819,7 +819,7 @@ class PropertyController extends Controller
 
         $applications = $applications->orderBy('application_date', 'desc')->paginate(10);
 
-        return view('landlord.applications.index', compact('applications'));
+        return view('Landlord.applications.index', compact('applications'));
     }
 
     // landlords view boarders
@@ -831,7 +831,7 @@ class PropertyController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('landlord.properties.boarders', compact('property', 'boarders'));
+        return view('Landlord.properties.boarders', compact('property', 'boarders'));
     }
 
     // view all boarders
@@ -876,7 +876,7 @@ class PropertyController extends Controller
 
         $boarders = $boarders->orderBy('created_at', 'desc')->paginate(15);
 
-        return view('landlord.boarders.index', compact('boarders'));
+        return view('Landlord.boarders.index', compact('boarders'));
     }
 
     public function landlordKickBoarders(Request $request, $boardersId)

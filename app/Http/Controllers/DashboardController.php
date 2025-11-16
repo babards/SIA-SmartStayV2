@@ -44,7 +44,7 @@ class DashboardController extends Controller
 
         //  Fetch properties with location data
         $properties = Property::select('propertyID', 'propertyName', 'propertyLocation', 'propertyRent', 'propertyStatus', 'latitude', 'longitude')->get();
-        return view('admin.dashboard', compact('stats', 'properties'));
+        return view('Admin.dashboard', compact('stats', 'properties'));
 
     }
 
@@ -93,7 +93,7 @@ class DashboardController extends Controller
             ->select('propertyID', 'propertyName', 'propertyLocation', 'propertyRent', 'propertyStatus', 'latitude', 'longitude')
             ->get();
 
-        return view('landlord.dashboard', compact('propertyStats', 'applicationStats', 'boarderStats', 'properties'));
+        return view('Landlord.dashboard', compact('propertyStats', 'applicationStats', 'boarderStats', 'properties'));
     }
 
 }

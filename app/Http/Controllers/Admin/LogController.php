@@ -47,6 +47,6 @@ class LogController extends Controller
         $actions = Log::distinct()->pluck('action');
         $users = \App\Models\User::orderBy('first_name')->get();
 
-        return view('admin.logs.index', compact('logs', 'actions', 'users'));
+        return view('Admin.logs.index', compact('logs', 'actions', 'users'));
     }
 } 
