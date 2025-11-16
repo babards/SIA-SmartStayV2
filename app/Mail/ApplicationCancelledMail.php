@@ -36,7 +36,7 @@ class ApplicationCancelledMail extends Mailable
     public function build()
     {
         return $this->subject('Application Cancelled - ' . $this->property->propertyName)
-                    ->view('emails.application-cancelled')
+                    ->view('Emails.application-cancelled')
                     ->with([
                         'application' => $this->application,
                         'property' => $this->property,

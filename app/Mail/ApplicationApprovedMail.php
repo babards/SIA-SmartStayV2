@@ -39,7 +39,7 @@ class ApplicationApprovedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.application_approved',
+            view: 'Emails.application_approved',
             with: ['application' => $this->application]
         );
     }

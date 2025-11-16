@@ -35,7 +35,7 @@ class VerifyEmail extends Mailable
     public function build()
     {
         return $this->subject('Verify Your Email Address')
-                    ->markdown('emails.verify-email');
+                    ->markdown('Emails.verify');
     }
    
     /**
@@ -54,7 +54,7 @@ class VerifyEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.verify',
+            markdown: 'Emails.verify',
         );
     }
 

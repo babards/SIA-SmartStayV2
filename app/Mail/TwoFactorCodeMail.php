@@ -23,7 +23,7 @@ class TwoFactorCodeMail extends Mailable
 
     public function build()
     {
-        return $this->markdown('emails.two-factor')
+        return $this->markdown('Emails.two-factor')
         ->subject('Your 2FA Code')
         ->with(['two_factor_code' => $this->user->two_factor_code]);
     }
@@ -41,7 +41,7 @@ class TwoFactorCodeMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.two-factor',
+            markdown: 'Emails.two-factor',
         );
     }
 

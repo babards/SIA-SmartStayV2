@@ -44,7 +44,7 @@ class ApplicationReceivedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.application-received',
+            view: 'Emails.application-received',
         );
     }
 

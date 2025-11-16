@@ -56,7 +56,7 @@ class WeatherAlertMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.weather_alert',
+            view: 'Emails.weather_alert',
             with: [
                 'alertData' => $this->alertData,
                 'property' => $this->property,

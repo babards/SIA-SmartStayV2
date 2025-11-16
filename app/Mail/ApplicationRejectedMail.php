@@ -39,7 +39,7 @@ class ApplicationRejectedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.application_rejected',
+            view: 'Emails.application_rejected',
             with: ['application' => $this->application]
         );
     }

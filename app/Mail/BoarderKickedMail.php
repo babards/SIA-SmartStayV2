@@ -39,7 +39,7 @@ class BoarderKickedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.boarder_kicked',
+            view: 'Emails.boarder_kicked',
             with: ['boarder' => $this->boarder]
         );
     }
